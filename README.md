@@ -19,7 +19,7 @@ execute next. The object is a simple JavaScript object containing an
 array of rules. It works virtually the same way as an assembly language
 does.
 
-### API
+### Rule Object API
 
 For each **rule**, the automaton expects:
 
@@ -103,5 +103,5 @@ object, which follows the protocol of:
 * **page**: The DOM element of the page against which all selectors are
   executed.
 * **rules**: This is the rule obejct.
-* **count**: *internal* This is a counter used by some components in
-  order to track when to quit upon repeated failures.
+* **counts**: *internal* This is a hash of counters used by some
+  components in order to track when to quit upon repeated failures.

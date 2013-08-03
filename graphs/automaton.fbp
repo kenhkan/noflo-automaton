@@ -1,0 +1,11 @@
+EXPORT=LOOPRULES.IN:IN
+EXPORT=REPORT.OUT:OUT
+
+LoopRules(Merge) OUT -> IN TestExistence(automaton/TestExistence) OUT -> IN LoopActions(Merge)
+LoopActions() OUT -> IN RunActions(automaton/RunActions) OUT -> IN WaitForEffects(automaton/WaitForEffects) OUT -> IN TestEffects(automaton/TestEffects)
+TestEffects() ERROR -> IN LoopActions()
+TestEffects() OUT -> IN EndRule(automaton/EndRule) OUT -> IN LoopRules()
+
+TestExistence() EXIT -> IN Report(Merge)
+TestEffects() EXIT -> IN Report()
+EndRule() EXIT -> IN Report()
