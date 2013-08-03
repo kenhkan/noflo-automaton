@@ -10,7 +10,11 @@
     "noflo/noflo": "*"
   },
   "scripts": [
-    "components/LoadPage.coffee",
+    "components/TestExistence.coffee",
+    "components/RunActions.coffee",
+    "components/WaitForEffects.coffee",
+    "components/TestEffects.coffee",
+    "components/Endrule.coffee",
     "index.js"
   ],
   "json": [
@@ -18,7 +22,11 @@
   ],
   "noflo": {
     "components": {
-      "LoadPage": "components/LoadPage.coffee"
+      "TestExistence": "components/TestExistence.coffee",
+      "RunActions": "components/RunActions.coffee",
+      "WaitForEffects": "components/WaitForEffects.coffee",
+      "TestEffects": "components/TestEffects.coffee",
+      "Endrule": "components/Endrule.coffee"
     }
   }
 }
