@@ -23,51 +23,85 @@ does.
 
 For each **rule**, the automaton expects:
 
-* selector: The CSS3 selector to operate on
-* actions: An array of actions to perform (see below)
-* conditions: An array of conditions to test for success before moving
+* **selector**: The CSS3 selector to operate on
+* **actions**: An array of actions to perform (see below)
+* **conditions**: An array of conditions to test for success before moving
   on (see below)
-* name: *optional* An identifier so other rules can refer to this rule
-* on-success: *optional* The next rule to execute upon success. It
+* **name**: *optional* An identifier so other rules can refer to this rule
+* **on-success**: *optional* The next rule to execute upon success. It
   refers to the rule by its name. Automaton scans forward for the name.
   In other words, automaton does not go back in history and will execute
   the first instance of the rules matching the name. If it's `false`,
   quit the program successfully. If it's `true`, the immediately next
   rule is executed. Default to `true`
-* on-failure: *optional* The next rule to execute upon failure. The same
+* **on-failure**: *optional* The next rule to execute upon failure. The same
   properties for `on-success` apply.
-* test-timeout: *optional* Number of milliseconds to timeout before
+* **test-timeout**: *optional* Number of milliseconds to timeout before
   applying 'conditions'. Default to immediate (i.e. calling
   `setTimeout()` with `0` milliseconds)
-* retry-timeout: *optional* Number of milliseconds to timeout before
+* **retry-timeout**: *optional* Number of milliseconds to timeout before
   retrying upon failure. Default to no retry (i.e. quit the program with
   a failure status number)
 
 For each **action** in the actions array:
 
-* action: One of [mouse and form
+* **action**: One of [mouse and form
   events](http://www.w3schools.com/jsref/dom_obj_event.asp) without the
   'on' prefix. It also accepts 'value' which would change the value of
   an input and trigger the 'change' event.
-* selector: *optional* The element to perform the action on. Default to
+* **selector**: *optional* The element to perform the action on. Default to
   the element specified by the rule selector.
 
 For each **condition** in the conditions array:
 
-* condition: The value to match on the element. This is a RegExp string.
+* **condition**: The value to match on the element. This is a RegExp string.
   For instance, when `class="page row item"` and the condition is not
   going to match with `^row$`. However, it would match with `row`.
-* property: *optional* The attribute name (e.g. 'class') to test.
+* **name**: *optional* An identifier for other conditions to refer to
+  this
+* **property**: *optional* The attribute name (e.g. 'class') to test.
   Default to the content of the HTML element
-* selector: *optional* The selector to test the condition on. Default to
+* **selector**: *optional* The selector to test the condition on. Default to
   the element specified by the rule selector.
-* on-success: *optional* The next condition by its name to test on
+* **on-success**: *optional* The next condition by its name to test on
   success. If it's `false`, stop testing and assume success. If it's
   `true`, move on to the next condition. Default to `true`
-* on-failure: *optional* The next condition by its name to test on
+* **on-failure**: *optional* The next condition by its name to test on
   failure. If it's `false`, stop testing and assume failure. If it's
   `true`, move on to the next condition. Default to `false`
 
 ### Examples
 
+Click on all the row items and test that all item has the content 'Item'
+except the one marked with 'you' as ID.
+
+    [
+      {
+        "selector": "body #page .row",
+        "actions": [
+          { "action": "click" },
+          { "action": "click", "selector": "body #page .row .item" }
+        ],
+        "conditions": [
+          { "condition": "Item" },
+          { "condition": "You", "selector": "body #page .row .item#you" }
+        ]
+      }
+    ]
+
 ## Data Structure
+
+The automaton is essentially a looper that ends when there is a failure
+in satisfying the provided conditions or when it completes successfully
+(i.e. no more rules to apply). Along with the expectation that after
+each test and rule, there is a timeout to allow DOM events to fire, the
+flow must be completely stateless.
+
+Therefore, each component in the automaton expects the same inbound
+object, which follows the protocol of:
+
+* **page**: The DOM element of the page against which all selectors are
+  executed.
+* **rules**: This is the rule obejct.
+* **count**: *internal* This is a counter used by some components in
+  order to track when to quit upon repeated failures.
