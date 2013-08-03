@@ -1,0 +1,24 @@
+{
+  "name": "noflo-automaton",
+  "description": "Automate navigation on the web",
+  "author": "Kenneth Kan <kenhkan@gmail.com>",
+  "repo": "kenhkan/noflo-automaton",
+  "version": "0.1.0",
+  "keywords": [
+  ],
+  "dependencies": {
+    "noflo/noflo": "*"
+  },
+  "scripts": [
+    "components/LoadPage.coffee",
+    "index.js"
+  ],
+  "json": [
+    "component.json"
+  ],
+  "noflo": {
+    "components": {
+      "LoadPage": "components/LoadPage.coffee"
+    }
+  }
+}
