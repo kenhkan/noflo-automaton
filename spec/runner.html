@@ -12,12 +12,16 @@
   </head>
   <body>
     <div id="mocha"></div>
-    <div id="fixtures"></div>
+    <div id="fixtures">
+      <div class="test-existence">
+        <div class="exists">Foo</div>
+      </div>
+    </div>
     <script src="../browser/noflo-automaton.js"></script>
     <script src="http://chaijs.com/chai.js"></script>
     <script src="../node_modules/mocha/mocha.js"></script>
     <script>mocha.setup('bdd');</script>
-    <script src="./LoadPage.js"></script>
+    <script src="./TestExistence.js"></script>
     <script>
       if (window.mochaPhantomJS) {
         mochaPhantomJS.run();
