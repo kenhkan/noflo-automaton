@@ -5,7 +5,7 @@ Automate navigation on the web.
 Given a URL and a rule object (structure described below),
 noflo-automaton would go through the rule object and try to reach the
 end, at which point the automaton would forward the accumulated output
-to its OUT port with the status number of '-1'.
+to its OUT port with the status number of 'true'.
 
 If at any point it fails, the automaton would still forward the
 accumulated output but with the status number being the rule number in
@@ -114,8 +114,9 @@ follows the protocol of:
 On OUT port from the graph `automaton/automaton` it outputs an object
 following this protocol:
 
-* **status**: `-1` if it's successful. The position of the rule in the
-  rule object otherwise.
+* **status**: `true` if it's successful. `false` if the provided page or
+  rule object is not valid. The position of the rule in the rule object
+  otherwise.
 * **error**: *optional* An error object or a string indicating the error
   message if any
 * **page**: The DOM element passed to the graph in the beginning

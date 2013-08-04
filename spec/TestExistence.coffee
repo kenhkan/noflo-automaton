@@ -51,21 +51,6 @@ describe 'TestExistence component', ->
       chai.expect(globals.c.outPorts.page).to.be.an 'object'
       chai.expect(globals.c.outPorts.selector).to.be.an 'object'
 
-  describe 'preconditions', ->
-    it 'forwards to EXIT if OUT is not attached', (done) ->
-      globals.c.outPorts.out.detach()
-
-      globals.exit.once 'data', (data) ->
-        chai.expect(data.status).to.equal 0
-        chai.expect(data.page).to.equal document
-        chai.expect(data.rules).to.deep.equal globals.rules
-        done()
-
-      globals.in.send
-        page: document
-        rules: globals.rules
-        status: 0
-
   describe 'testing existence', ->
     beforeEach ->
       globals.pageEl = document.querySelector '.test-existence'

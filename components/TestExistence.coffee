@@ -12,22 +12,16 @@ class TestExistence extends noflo.Component
       page: new noflo.Port 'object'
       selector: new noflo.Port 'string'
 
-    @inPorts.in.on 'data', (data) =>
-      if @outPorts.out.isAttached()
-        @context = data
-        page = @context.page
-        selector = @context.rules[@context.status].selector
+    @inPorts.in.on 'data', (@context) =>
+      page = @context.page
+      selector = @context.rules[@context.status].selector
 
-        @outPorts.page.send page
-        @outPorts.selector.send selector
-
-      else
-        @outPorts.exit.send data
+      @outPorts.page.send page
+      @outPorts.selector.send selector
 
     @inPorts.in.on 'disconnect', =>
       @outPorts.page.disconnect()
       @outPorts.selector.disconnect()
-      @outPorts.exit.disconnect()
 
     @inPorts.element.on 'data', (data) =>
       @outPorts.out.send @context

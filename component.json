@@ -7,14 +7,15 @@
   "keywords": [
   ],
   "dependencies": {
-    "noflo/noflo": "*"
+    "noflo/noflo": "*",
+    "component/underscore": "*"
   },
   "scripts": [
     "components/TestExistence.coffee",
     "components/RunActions.coffee",
     "components/WaitForEffects.coffee",
     "components/TestEffects.coffee",
-    "components/Endrule.coffee",
+    "components/Iterate.coffee",
     "index.js"
   ],
   "json": [
@@ -26,7 +27,7 @@
       "RunActions": "components/RunActions.coffee",
       "WaitForEffects": "components/WaitForEffects.coffee",
       "TestEffects": "components/TestEffects.coffee",
-      "Endrule": "components/Endrule.coffee"
+      "Iterate": "components/Iterate.coffee"
     }
   }
 }
