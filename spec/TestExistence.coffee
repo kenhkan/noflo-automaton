@@ -42,10 +42,14 @@ describe 'TestExistence component', ->
   describe 'when instantiated', ->
     it 'should have an input port', ->
       chai.expect(globals.c.inPorts.in).to.be.an 'object'
+      chai.expect(globals.c.inPorts.element).to.be.an 'object'
+      chai.expect(globals.c.inPorts.error).to.be.an 'object'
 
     it 'should have an output port', ->
       chai.expect(globals.c.outPorts.out).to.be.an 'object'
       chai.expect(globals.c.outPorts.exit).to.be.an 'object'
+      chai.expect(globals.c.outPorts.page).to.be.an 'object'
+      chai.expect(globals.c.outPorts.selector).to.be.an 'object'
 
   describe 'preconditions', ->
     it 'forwards to EXIT if OUT is not attached', (done) ->
