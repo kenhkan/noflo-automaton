@@ -31,11 +31,12 @@ noflo-automaton`!
 To use noflo-automaton, you only need to interface with the
 `automaton/automaton` graph, which expects:
 
-* Inport **page**: The DOM element of the page against which all selectors are
-  executed
+* Inport **url**: The URL to start the navigation with
 * Inport **rules**: This is the rule obejct (see below)
 * Inport **options**: *optional* A dictionary of options to be passed to
-  [Casper.js](http://docs.casperjs.org/en/latest/modules/casper.html)
+  [Casper.js](http://docs.casperjs.org/en/latest/modules/casper.html). If
+  `logLevel` is specified and its value is `debug`, all log from Casper.js will
+  be printed to `console.log`.
 
 Note that jQuery and Underscore.js are always injected unless they're included
 on the page. Manual injection of those two libraries may result in conflict.
@@ -48,7 +49,7 @@ The graph then outputs:
   otherwise.
 * Outport **error**: *optional* An error object or a string indicating the
   error message if any
-* Outport **page**: The DOM element passed to the graph in the beginning
+* Outport **url**: The URL of the final page
 * Outport **rules**: The rule object passed to the graph in the beginning
 
 ## The Rule Object
@@ -86,8 +87,11 @@ For each **action** in the actions array:
 
 * **action**: One of [mouse and form
   events](http://www.w3schools.com/jsref/dom_obj_event.asp) without the 'on'
-  prefix. It also accepts 'value' which would change the value of an input and
-  trigger the 'change' event.
+  prefix. It also accepts:
+  * *value* which changes the value of an input and trigger the `chang`e
+    event.
+  * *form* which fills a form with the provided dictionary of form element name
+    and its desired value
 * **selector**: *optional* The element to perform the action on. Default to the
   element specified by the rule selector.
 
@@ -139,13 +143,11 @@ stateless.
 Therefore, each component in the automaton internal loop expects the same
 inbound object, which follows the protocol of:
 
-* **page**: The DOM element of the page against which all selectors are
-  executed.
+* **casper**: This is the Casper.js object to iterate on. It is created on
+  demand.
 * **rules**: This is the rule obejct.
 * **offset**: This is the current rule's offset in the rule object.  This is
   used internally as a counter to refer to the the current rule to be applied
   as well as forwarded to OUT upon completion.
 * **counts**: This is a hash of counters used by some components in order to
   track when to quit upon repeated failures.
-* **casper**: This is the Casper.js object to iterate on. It is created on
-  demand.
