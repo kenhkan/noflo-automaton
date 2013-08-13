@@ -1,8 +1,8 @@
-# noflo-automaton
+# Automate navigation on the web
 [![Build Status](https://secure.travis-ci.org/kenhkan/noflo-automaton.png?branch=master)](http://travis-ci.org/kenhkan/noflo-automaton) [![Dependency Status](https://gemnasium.com/kenhkan/noflo-automaton.png)](https://gemnasium.com/kenhkan/noflo-automaton) [![NPM version](https://badge.fury.io/js/noflo-automaton.png)](http://badge.fury.io/js/noflo-automaton) [![Stories in Ready](https://badge.waffle.io/kenhkan/noflo-automaton.png)](http://waffle.io/kenhkan/noflo-automaton)
 
-Automate navigation on the web. This component library is built for NoFlo using
-Casper.js.
+This component library is built for [NoFlo](http://noflojs.org/) using
+[Casper.js](http://casperjs.org/).
 
 Given a URL and a rule object (structure described below), noflo-automaton
 would go through the rule object and try to reach the end, at which point the
