@@ -3,7 +3,7 @@
   "description": "Automate navigation on the web",
   "author": "Kenneth Kan <kenhkan@gmail.com>",
   "repo": "kenhkan/noflo-automaton",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "keywords": [
   ],
   "dependencies": {

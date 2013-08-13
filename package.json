@@ -1,7 +1,7 @@
 {
   "name": "noflo-automaton",
-  "description": "Automate navigation on the web",
-  "version": "0.1.0",
+  "description": "Automate navigation on the web based on Casper.js",
+  "version": "0.0.0",
   "author": {
     "name": "Kenneth Kan",
     "email": "kenhkan@gmail.com"
@@ -13,7 +13,7 @@
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/kenhkan/noflo-automaton/blob/master/LICENSE-MIT"
+      "url": "https://github.com/kenhkan/noflo-automaton/blob/master/LICENSE.md"
     }
   ],
   "dependencies": {
@@ -35,5 +35,12 @@
     "grunt-combine": "~0.8.3",
     "grunt-component": "~0.1.2"
   },
-  "keywords": []
+  "keywords": [
+    "scraping",
+    "webpage",
+    "casperjs",
+    "phantomjs",
+    "navigation",
+    "automation"
+  ]
 }
