@@ -2,7 +2,8 @@
 [![Build Status](https://secure.travis-ci.org/kenhkan/noflo-automaton.png?branch=master)](http://travis-ci.org/kenhkan/noflo-automaton) [![Dependency Status](https://gemnasium.com/kenhkan/noflo-automaton.png)](https://gemnasium.com/kenhkan/noflo-automaton) [![NPM version](https://badge.fury.io/js/noflo-automaton.png)](http://badge.fury.io/js/noflo-automaton) [![Stories in Ready](https://badge.waffle.io/kenhkan/noflo-automaton.png)](http://waffle.io/kenhkan/noflo-automaton)
 
 This component library is built for [NoFlo](http://noflojs.org/) using
-[Casper.js](http://casperjs.org/).
+[Casper.js](http://casperjs.org/) via
+[SpookyJS](https://github.com/WaterfallEngineering/SpookyJS) as driver.
 
 Given a URL and a rule object (structure described below), noflo-automaton
 would go through the rule object and try to reach the end, at which point the
@@ -12,6 +13,43 @@ number of 'true'.
 If at any point it fails, the automaton would still forward the accumulated
 output but with the status number being the rule number in the provided rule
 object.
+
+Note that the output of this library is asynchronous.
+
+## Requirements and Installation
+
+Casper.js and by extension, Phantom.js, are required. In other words, this
+library runs only on a server and not the browser. Check out [Casper.js
+documentation](http://docs.casperjs.org/en/latest/installation.html) for
+installation instructions.
+
+Once you have these installed, it's just a simple `npm install --save
+noflo-automaton`!
+
+## API
+
+To use noflo-automaton, you only need to interface with the
+`automaton/automaton` graph, which expects:
+
+* Inport **page**: The DOM element of the page against which all selectors are
+  executed
+* Inport **rules**: This is the rule obejct (see below)
+* Inport **options**: *optional* A dictionary of options to be passed to
+  [Casper.js](http://docs.casperjs.org/en/latest/modules/casper.html)
+
+Note that jQuery and Underscore.js are always injected unless they're included
+on the page. Manual injection of those two libraries may result in conflict.
+
+The graph then outputs:
+
+* Outport **out**: The accumulated output from executing all the steps
+* Outport **status**: `true` if it's successful. `false` if the provided page
+  or rule object is not valid. The position of the rule in the rule object
+  otherwise.
+* Outport **error**: *optional* An error object or a string indicating the
+  error message if any
+* Outport **page**: The DOM element passed to the graph in the beginning
+* Outport **rules**: The rule object passed to the graph in the beginning
 
 ## The Rule Object
 
@@ -98,25 +136,16 @@ more rules to apply). Along with the expectation that after each test and rule,
 there is a timeout to allow DOM events to fire, the flow must be completely
 stateless.
 
-Therefore, each component in the automaton, including the graph
-`automaton/automaton` itself, expects the same inbound object, which follows
-the protocol of:
+Therefore, each component in the automaton internal loop expects the same
+inbound object, which follows the protocol of:
 
 * **page**: The DOM element of the page against which all selectors are
   executed.
 * **rules**: This is the rule obejct.
-* **status**: *internal* This is the current rule's offset in the rule object.
-  This is used internally as a counter to refer to the the current rule to be
-  applied as well as forwarded to OUT upon completion.
-* **counts**: *internal* This is a hash of counters used by some components in
-  order to track when to quit upon repeated failures.
-
-On OUT port from the graph `automaton/automaton` it outputs an object following
-this protocol:
-
-* **status**: `true` if it's successful. `false` if the provided page or rule
-  object is not valid. The position of the rule in the rule object otherwise.
-* **error**: *optional* An error object or a string indicating the error
-  message if any
-* **page**: The DOM element passed to the graph in the beginning
-* **rules**: The rule object passed to the graph in the beginning
+* **offset**: This is the current rule's offset in the rule object.  This is
+  used internally as a counter to refer to the the current rule to be applied
+  as well as forwarded to OUT upon completion.
+* **counts**: This is a hash of counters used by some components in order to
+  track when to quit upon repeated failures.
+* **casper**: This is the Casper.js object to iterate on. It is created on
+  demand.
