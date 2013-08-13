@@ -1,33 +1,18 @@
 {
   "name": "noflo-automaton",
-  "description": "Automate navigation on the web",
+  "description": "Automate navigation on the web based on Casper.js",
   "author": "Kenneth Kan <kenhkan@gmail.com>",
   "repo": "kenhkan/noflo-automaton",
   "version": "0.0.0",
   "keywords": [
   ],
   "dependencies": {
-    "noflo/noflo": "*",
-    "component/underscore": "*"
+    "noflo/noflo": "*"
   },
   "scripts": [
-    "components/TestExistence.coffee",
-    "components/RunActions.coffee",
-    "components/WaitForEffects.coffee",
-    "components/TestEffects.coffee",
-    "components/Iterate.coffee",
     "index.js"
   ],
   "json": [
     "component.json"
-  ],
-  "noflo": {
-    "components": {
-      "TestExistence": "components/TestExistence.coffee",
-      "RunActions": "components/RunActions.coffee",
-      "WaitForEffects": "components/WaitForEffects.coffee",
-      "TestEffects": "components/TestEffects.coffee",
-      "Iterate": "components/Iterate.coffee"
-    }
-  }
+  ]
 }

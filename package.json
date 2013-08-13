@@ -42,5 +42,17 @@
     "phantomjs",
     "navigation",
     "automation"
-  ]
+  ],
+  "noflo": {
+    "components": {
+      "TestExistence": "components/TestExistence.coffee",
+      "RunActions": "components/RunActions.coffee",
+      "WaitForEffects": "components/WaitForEffects.coffee",
+      "TestEffects": "components/TestEffects.coffee",
+      "Iterate": "components/Iterate.coffee"
+    },
+    "graphs": {
+      "automaton": "graphs/automaton.fbp"
+    }
+  }
 }
