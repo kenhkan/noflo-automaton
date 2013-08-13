@@ -35,8 +35,11 @@ To use noflo-automaton, you only need to interface with the
 * Inport **rules**: This is the rule obejct (see below)
 * Inport **options**: *optional* A dictionary of options to be passed to
   [Casper.js](http://docs.casperjs.org/en/latest/modules/casper.html). If
-  `logLevel` is specified and its value is `debug`, all log from Casper.js will
-  be printed to `console.log`.
+  `verbose` set to true, all log from Casper.js will be printed to
+  `console.log`.
+
+Options must be passed in before URL and rules ports disconnect given that it
+is optional.
 
 Note that jQuery and Underscore.js are always injected unless they're included
 on the page. Manual injection of those two libraries may result in conflict.
@@ -44,13 +47,10 @@ on the page. Manual injection of those two libraries may result in conflict.
 The graph then outputs:
 
 * Outport **out**: The accumulated output from executing all the steps
-* Outport **status**: `true` if it's successful. `false` if the provided page
-  or rule object is not valid. The position of the rule in the rule object
-  otherwise.
-* Outport **error**: *optional* An error object or a string indicating the
-  error message if any
-* Outport **url**: The URL of the final page
-* Outport **rules**: The rule object passed to the graph in the beginning
+* Outport **error**: An error packet if the rule or the options object is not
+  valid
+* Outport **status**: `true` if it's successful. The position of the rule in
+  the rule object otherwise.
 
 ## The Rule Object
 
@@ -88,7 +88,7 @@ For each **action** in the actions array:
 * **action**: One of [mouse and form
   events](http://www.w3schools.com/jsref/dom_obj_event.asp) without the 'on'
   prefix. It also accepts:
-  * *value* which changes the value of an input and trigger the `chang`e
+  * *value* which changes the value of an input and trigger the `change`
     event.
   * *form* which fills a form with the provided dictionary of form element name
     and its desired value
@@ -143,7 +143,7 @@ stateless.
 Therefore, each component in the automaton internal loop expects the same
 inbound object, which follows the protocol of:
 
-* **casper**: This is the Casper.js object to iterate on. It is created on
+* **spooky**: This is the SppokyJS object to iterate on. It is created on
   demand.
 * **rules**: This is the rule obejct.
 * **offset**: This is the current rule's offset in the rule object.  This is
