@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/kenhkan/noflo-automaton.png)](https://waffle.io/kenhkan/noflo-automaton)  
 # noflo-automaton
 [![Build Status](https://secure.travis-ci.org/kenhkan/noflo-automaton.png?branch=master)](http://travis-ci.org/kenhkan/noflo-automaton)
 
