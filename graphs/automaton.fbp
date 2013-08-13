@@ -1,29 +1,16 @@
-EXPORT=LOOPRULES.IN:IN
-EXPORT=REPORT.OUT:OUT
+EXPORT=SETUP.IN:IN
+EXPORT=RUN.OUT:OUT
 
 # The looper
 
-LoopRules(Merge) OUT -> IN Iterate(automaton/Iterate) OUT -> IN TestExistence(automaton/TestExistence) OUT -> IN LoopActions(Merge)
-LoopActions() OUT -> IN RunActions(automaton/RunActions) OUT -> IN WaitForEffects(automaton/WaitForEffects) OUT -> IN TestEffects(automaton/TestEffects)
-TestEffects() ERROR -> IN LoopActions()
-TestEffects() OUT -> IN LoopRules()
+Setup(automaton/Setup) OUT -> IN Iterate(automaton/Iterate)
+Iterate() OUT -> IN TestExistence(automaton/TestExistence) OUT -> IN RunActions(automaton/RunActions)
+RunActions() OUT -> IN WaitForEffects(automaton/WaitForEffects) OUT -> IN TestEffects(automaton/TestEffects)
+TestEffects() ERROR -> IN RunActions()
+TestEffects() OUT -> IN Iterate()
 
 # Report on exit (either success or failure)
 
-TestExistence() EXIT -> IN Report(Merge)
-TestEffects() EXIT -> IN Report()
-Iterate() EXIT -> IN Report()
-
-# noflo-dom helpers
-
-TestExistence() PAGE -> IN TestExistenceElement(dom/GetElement) ELEMENT -> ELEMENT TestExistence()
-TestExistence() SELECTOR -> SELECTOR TestExistenceElement() ERROR -> ERROR TestExistence()
-
-RunActions() PAGE -> IN RunActionsElement(dom/GetElement) ELEMENT -> ELEMENT RunActions()
-RunActions() SELECTOR -> SELECTOR RunActionsElement() ERROR -> ERROR RunActions()
-
-WaitForEffects() PAGE -> IN WaitForEffectsElement(dom/GetElement) ELEMENT -> ELEMENT WaitForEffects()
-WaitForEffects() SELECTOR -> SELECTOR WaitForEffectsElement() ERROR -> ERROR WaitForEffects()
-
-TestEffects() PAGE -> IN TestEffectsElement(dom/GetElement) ELEMENT -> ELEMENT TestEffects()
-TestEffects() SELECTOR -> SELECTOR TestEffectsElement() ERROR -> ERROR TestEffects()
+TestExistence() EXIT -> IN Run(automaton/Run)
+TestEffects() EXIT -> IN Run()
+Iterate() EXIT -> IN Run()

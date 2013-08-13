@@ -49,7 +49,9 @@
       "RunActions": "components/RunActions.coffee",
       "WaitForEffects": "components/WaitForEffects.coffee",
       "TestEffects": "components/TestEffects.coffee",
-      "Iterate": "components/Iterate.coffee"
+      "Iterate": "components/Iterate.coffee",
+      "Setup": "components/Setup.coffee",
+      "Run": "components/Run.coffee"
     },
     "graphs": {
       "automaton": "graphs/automaton.fbp"
