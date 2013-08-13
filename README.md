@@ -44,13 +44,13 @@ is optional.
 Note that jQuery and Underscore.js are always injected unless they're included
 on the page. Manual injection of those two libraries may result in conflict.
 
-The graph then outputs:
+The graph then outputs to either port, with the **status** wrapping as group.
+**status** is `true` if successful and the offset of the last executed rule if
+failed.
 
 * Outport **out**: The accumulated output from executing all the steps
 * Outport **error**: An error packet if the rule or the options object is not
   valid
-* Outport **status**: `true` if it's successful. The position of the rule in
-  the rule object otherwise.
 
 ## The Rule Object
 

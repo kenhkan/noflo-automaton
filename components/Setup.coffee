@@ -59,7 +59,7 @@ class Setup extends noflo.Component
     # Create a Spooky instance
     spooky = new Spooky
       casper: options
-    , (error) ->
+    , (error) =>
 
       # Send to error if initialization fails
       if error
@@ -81,11 +81,8 @@ class Setup extends noflo.Component
         spooky.on 'console', (line) ->
           console.log line
 
-      # TODO: this should be in automaton/Run
-      # Capture end of navigation
-      #spooky.on 'log', (log) ->
-      #  if log.space is 'remote'
-      #    _.extend accum, JSON.parse log.message
+      # Start with some page
+      spooky.start url
 
       # Forward the packet
       @outPorts.out.send

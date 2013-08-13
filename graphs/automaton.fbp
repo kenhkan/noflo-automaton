@@ -1,7 +1,6 @@
 EXPORT=SETUP.IN:IN
 EXPORT=RUN.OUT:OUT
 EXPORT=SETUP.ERROR:ERROR
-EXPORT=RUN.STATUS:STATUS
 
 # The looper
 
@@ -11,7 +10,7 @@ RunActions() OUT -> IN WaitForEffects(automaton/WaitForEffects) OUT -> IN TestEf
 TestEffects() ERROR -> IN RunActions()
 TestEffects() OUT -> IN Iterate()
 
-# Report on exit (either success or failure)
+# Run on exit
 
 TestExistence() EXIT -> IN Run(automaton/Run)
 TestEffects() EXIT -> IN Run()
