@@ -1,6 +1,6 @@
 noflo = require 'noflo'
 
-class TestExistence extends noflo.Component
+class TestEffects extends noflo.Component
   constructor: ->
     @inPorts =
       in: new noflo.Port
@@ -16,4 +16,4 @@ class TestExistence extends noflo.Component
 
     @inPorts.in.on 'disconnect', ->
 
-exports.getComponent = -> new TestExistence
+exports.getComponent = -> new TestEffects
