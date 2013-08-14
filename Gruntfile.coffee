@@ -8,27 +8,22 @@ module.exports = ->
       files: ['spec/*.coffee', 'components/*.coffee']
       tasks: ['test']
 
-    # BDD tests on Node.js
-    cafemocha:
-      nodejs:
-        src: ['spec/*.coffee']
-        options:
-          reporter: 'dot'
-
     # Coding standards
     coffeelint:
       components: ['components/*.coffee']
 
+    # NodeUnit tests
+    nodeunit:
+      all: ['test/*.coffee']
+
   # Grunt plugins used for testing
   @loadNpmTasks 'grunt-contrib-watch'
-  @loadNpmTasks 'grunt-cafe-mocha'
+  @loadNpmTasks 'grunt-contrib-nodeunit'
   @loadNpmTasks 'grunt-coffeelint'
 
   # Our local tasks
-  @registerTask 'build', 'Build NoFlo for the chosen target platform', (target = 'all') =>
-
   @registerTask 'test', 'Build NoFlo and run automated tests', (target = 'all') =>
     @task.run 'coffeelint'
-    @task.run 'cafemocha'
+    @task.run 'nodeunit'
 
   @registerTask 'default', ['test']
