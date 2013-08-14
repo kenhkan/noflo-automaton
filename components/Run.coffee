@@ -10,6 +10,7 @@ class Run extends noflo.Component
     @inPorts.in.on 'data', (data) =>
       output = []
       { spooky, offset } = data
+      offset ?= null
 
       # Capture output from phantom's console
       spooky.on 'log', (log) ->
