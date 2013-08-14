@@ -89,7 +89,6 @@ module.exports =
         test.ok _.isFunction data.spooky.then
         test.ok _.isFunction data.spooky.thenEvaluate
         test.ok _.isArray data.rules
-        test.ok _.isNumber data.offset
         test.ok _.isObject data.counts
         test.done()
 
@@ -106,7 +105,6 @@ module.exports =
         test.ok _.isFunction data.spooky.then
         test.ok _.isFunction data.spooky.thenEvaluate
         test.ok _.isArray data.rules
-        test.ok _.isNumber data.offset
         test.ok _.isObject data.counts
         test.done()
 

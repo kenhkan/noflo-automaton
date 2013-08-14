@@ -1,4 +1,3 @@
-_ = require 'underscore'
 noflo = require 'noflo'
 Spooky = require 'spooky'
 Run = require '../components/Run.coffee'

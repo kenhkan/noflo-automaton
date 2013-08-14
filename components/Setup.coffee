@@ -88,7 +88,6 @@ class Setup extends noflo.Component
       @outPorts.out.send
         spooky: spooky
         rules: rules
-        offset: 0
         counts: {}
       @outPorts.out.disconnect()
 
