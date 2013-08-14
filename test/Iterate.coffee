@@ -1,5 +1,4 @@
 noflo = require 'noflo'
-Spooky = require 'spooky'
 Iterate = require '../components/Iterate.coffee'
 
 globals = {}

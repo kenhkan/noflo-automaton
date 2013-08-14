@@ -6,7 +6,7 @@ globals = {}
 
 module.exports =
   setUp: (done) ->
-    globals.testUrl = 'http://noflojs.org'
+    globals.testUrl = 'http://google.com'
     globals.testRules = [
       {
         selector: '.foo'
@@ -90,6 +90,9 @@ module.exports =
         test.ok _.isFunction data.spooky.thenEvaluate
         test.ok _.isArray data.rules
         test.ok _.isObject data.counts
+
+        # Run Spooky to avoid memory leak
+        process.nextTick -> data.spooky.run()
         test.done()
 
       globals.url.send globals.testUrl
@@ -106,6 +109,9 @@ module.exports =
         test.ok _.isFunction data.spooky.thenEvaluate
         test.ok _.isArray data.rules
         test.ok _.isObject data.counts
+
+        # Run Spooky to avoid memory leak
+        process.nextTick -> data.spooky.run()
         test.done()
 
       globals.url.send globals.testUrl

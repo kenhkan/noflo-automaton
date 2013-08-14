@@ -70,3 +70,6 @@ module.exports =
 
         globals.in.send context
         globals.in.disconnect()
+
+        # Run Spooky to avoid memory leak
+        process.nextTick -> spooky.run()
