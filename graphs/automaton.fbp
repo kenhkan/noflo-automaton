@@ -4,12 +4,15 @@ EXPORT=SETUP.ERROR:ERROR
 
 # The looper
 
-Setup(automaton/Setup) OUT -> IN Iterate(automaton/Iterate) OUT -> IN RunActions(automaton/RunActions) OUT -> IN TestEffects(automaton/TestEffects)
-TestEffects() ERROR -> IN RunActions()
+Setup(automaton/Setup) OUT -> IN Iterate(automaton/Iterate) OUT -> IN SwitchActions(automaton/SwitchActions)
+TestEffects(automaton/TestEffects) ERROR -> IN SwitchActions()
 TestEffects() OUT -> IN Iterate()
+
+# Various action runners
+
+SwitchActions() OUT -> IN Click(automaton/Click) OUT -> IN TestEffects()
 
 # Run on exit
 
-RunActions() EXIT -> IN Run(automaton/Run)
-TestEffects() EXIT -> IN Run()
+TestEffects() EXIT -> IN Run(automaton/Run)
 Iterate() EXIT -> IN Run()
