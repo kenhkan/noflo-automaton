@@ -9,9 +9,6 @@ class SwitchActions extends noflo.Component
       out: new noflo.Port
       action: new noflo.ArrayPort
 
-    @inPorts.in.on 'begingroup', (group) =>
-      @outPorts.out.beginGroup group
-
     @inPorts.in.on 'data', (data) =>
       rule = data.rules[data.offset]
 
@@ -26,9 +23,6 @@ class SwitchActions extends noflo.Component
         a.selector ?= rule.selector
 
         @outPorts.action.send a
-
-    @inPorts.in.on 'endgroup', (group) =>
-      @outPorts.out.endGroup()
 
     @inPorts.in.on 'disconnect', =>
       @outPorts.action.disconnect()
