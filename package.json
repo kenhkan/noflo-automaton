@@ -19,7 +19,8 @@
   "dependencies": {
     "noflo": "~0.4.0",
     "underscore": "~1.5.1",
-    "spooky": "~0.2.3"
+    "spooky": "~0.2.3",
+    "uuid": "~1.4.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

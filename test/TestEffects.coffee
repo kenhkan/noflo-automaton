@@ -14,7 +14,7 @@ module.exports =
           { action: 'click', selector: 'input[name="btnk"]' }
         ]
         conditions: [
-          { value: 'Google Search', property: 'value' }
+          { value: 'Google Search', property: 'value', selector: 'form input[type="text"]' }
         ]
       }
     ]
@@ -57,6 +57,8 @@ module.exports =
 
   'test effects of actions':
     'forwards context object and continue the Spooky flow on success': (test) ->
+      test.expect 1
+
       context =
         rules: globals.testRulesSuccess
         offset: 0
@@ -65,6 +67,9 @@ module.exports =
 
       globals.out.on 'data', (data) ->
         test.deepEqual data, context
+
+      globals.exit.on 'data', (data) ->
+        test.ok false, 'should not exit because the selector and value match'
 
       spooky = new Spooky {}, ->
         context.spooky = spooky
