@@ -40,6 +40,7 @@ module.exports =
       test.equal typeof globals.c.outPorts.action, 'object'
       test.done()
 
+###
   'action switching':
     'passes the context object with the number of actions to OUT and rules wrapped in the action name to ACTION': (test) ->
       test.expect 3
@@ -73,3 +74,4 @@ module.exports =
 
         # Run Spooky to avoid memory leak
         process.nextTick -> spooky.run()
+###

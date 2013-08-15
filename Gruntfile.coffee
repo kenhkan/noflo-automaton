@@ -14,7 +14,7 @@ module.exports = ->
 
     # NodeUnit tests
     nodeunit:
-      all: ['test/*.coffee']
+      all: ['spec/*.coffee']
 
   # Grunt plugins used for testing
   @loadNpmTasks 'grunt-contrib-watch'
