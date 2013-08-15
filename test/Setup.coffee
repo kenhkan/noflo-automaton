@@ -6,7 +6,7 @@ globals = {}
 
 module.exports =
   setUp: (done) ->
-    globals.testUrl = 'http://google.com'
+    globals.testUrl = 'http://www.google.com'
     globals.testRules = [
       {
         selector: '.foo'
