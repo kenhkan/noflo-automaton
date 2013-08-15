@@ -42,7 +42,7 @@ module.exports =
         test.done()
 
         # Run Spooky to avoid memory leak
-        process.nextTick -> spooky.run()
+        spooky.run()
 
   'send output from phantom browser':
     'forwards an output accumulator wrapped by offset': (test) ->
@@ -63,7 +63,7 @@ module.exports =
         globals.in.disconnect()
 
         # Run Spooky to avoid memory leak
-        process.nextTick -> spooky.run()
+        spooky.run()
 
     'output accumulator stores output from phantom browser': (test) ->
       test.expect 2
@@ -89,4 +89,4 @@ module.exports =
         globals.in.disconnect()
 
         # Run Spooky to avoid memory leak
-        process.nextTick -> spooky.run()
+        spooky.run()

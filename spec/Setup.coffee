@@ -92,7 +92,7 @@ module.exports =
         test.ok _.isObject data.counts
 
         # Run Spooky to avoid memory leak
-        process.nextTick -> data.spooky.run()
+        data.spooky.run()
         test.done()
 
       globals.url.send globals.testUrl
@@ -111,7 +111,7 @@ module.exports =
         test.ok _.isObject data.counts
 
         # Run Spooky to avoid memory leak
-        process.nextTick -> data.spooky.run()
+        data.spooky.run()
         test.done()
 
       globals.url.send globals.testUrl
