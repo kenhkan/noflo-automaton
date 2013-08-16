@@ -47,7 +47,7 @@
       "Run": "components/Run.coffee"
     },
     "graphs": {
-      "automaton": "graphs/automaton.fbp"
+      "Automaton": "graphs/Automaton.fbp"
     }
   },
   "scripts": {

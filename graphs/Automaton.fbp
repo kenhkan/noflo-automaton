@@ -1,0 +1,18 @@
+EXPORT=SETUP.IN:IN
+EXPORT=RUN.OUT:OUT
+EXPORT=SETUP.ERROR:ERROR
+ 
+# The looper
+ 
+Setup(automaton/Setup) OUT -> IN Iterate(automaton/Iterate) OUT -> IN TestActions(automaton/TestActions) OUT -> IN TestEffects(automaton/TestEffects) ERROR -> IN TestActions()
+TestEffects() OUT -> IN Iterate()
+ 
+# Various action runners
+ 
+TestActions() OUT -> IN Click(automaton/Click)
+ 
+# Run on exit
+
+Iterate() EXIT -> IN Run(automaton/Run)
+TestActions() EXIT -> IN Run()
+TestEffects() EXIT -> IN Run()
