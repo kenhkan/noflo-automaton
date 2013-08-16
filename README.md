@@ -16,7 +16,7 @@ object.
 
 Note that the output of this library is asynchronous.
 
-## Requirements and Installation
+## Installation
 
 Casper.js and by extension, Phantom.js, are required. In other words, this
 library runs only on a server and not the browser. Check out [Casper.js
@@ -63,6 +63,8 @@ The object is a simple JavaScript object containing an array of rules. It works
 virtually the same way as an assembly language does.
 
 ### Rule Object API
+
+#### NOTE: The follow API has not been completely implemented. See issues #2 - #5.
 
 For each **rule**, the automaton expects:
 
