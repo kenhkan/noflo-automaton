@@ -177,3 +177,7 @@ port is attached before sending.
 Runners should attach themselves to either the `automaton/TestActions`
 component or other runners. This cascading structure allows certain runners to
 always take precedence over others.
+
+Note that action runners do not need to be attached back to the system as the
+SpookyJS object is passed by reference in the context object as action runners
+apply the actions.

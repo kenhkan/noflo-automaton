@@ -2,7 +2,7 @@ noflo = require 'noflo'
 _ = require 'underscore'
 uuid = require 'uuid'
 
-class SwitchActions extends noflo.Component
+class TestActions extends noflo.Component
   constructor: ->
     @inPorts =
       in: new noflo.Port
@@ -60,4 +60,4 @@ class SwitchActions extends noflo.Component
       @outPorts.action.disconnect()
       @outPorts.out.disconnect()
 
-exports.getComponent = -> new SwitchActions
+exports.getComponent = -> new TestActions

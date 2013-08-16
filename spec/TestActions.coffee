@@ -1,6 +1,6 @@
 noflo = require 'noflo'
 Spooky = require 'spooky'
-SwitchActions = require '../components/SwitchActions.coffee'
+TestActions = require '../components/TestActions.coffee'
 
 globals = {}
 
@@ -19,7 +19,7 @@ module.exports =
       }
     ]
 
-    globals.c = SwitchActions.getComponent()
+    globals.c = TestActions.getComponent()
     globals.in = noflo.internalSocket.createSocket()
     globals.out = noflo.internalSocket.createSocket()
     globals.action = noflo.internalSocket.createSocket()
