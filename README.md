@@ -48,7 +48,10 @@ The graph then outputs to either port, with the **status** wrapping as group.
 **status** is `null` if successful and the offset of the last executed rule if
 failed.
 
-* Outport **out**: The accumulated output from executing all the steps
+* Outport **out**: The accumulated output from executing all the steps. This is
+  a stack of all `console.log` output prefixd with `[output] ` from the remote
+  *browser*. For instance, `[output] {"a":"b"}` would be saved while
+  `{"a":"b"}` would not.
 * Outport **error**: An error packet if the rule or the options object is not
   valid
 

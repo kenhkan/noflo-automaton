@@ -14,8 +14,9 @@ class Run extends noflo.Component
 
       # Capture output from phantom's console
       spooky.on 'log', (log) ->
-        if log.space is 'remote'
-          output.push JSON.parse log.message
+        regexp = /^\[output\] /
+        if (log.space is 'remote') and (log.message.match regexp)
+          output.push JSON.parse log.message.replace regexp, ''
 
       # Forward packets on completion
       spooky.on 'run.complete', =>

@@ -80,8 +80,12 @@ module.exports =
       spooky = new Spooky {}, ->
         spooky.start 'http://www.google.com/'
         spooky.thenEvaluate ->
-          console.log JSON.stringify
+          # This is stored
+          console.log '[output] ' + JSON.stringify
             some: 'data'
+          # This is not
+          console.log JSON.stringify
+            some: 'other data'
 
         globals.in.send
           spooky: spooky
