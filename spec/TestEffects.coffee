@@ -15,6 +15,7 @@ module.exports =
         ]
         conditions: [
           { value: 'Google Search', property: 'value', selector: 'form input[type="text"]' }
+          { value: 'Search', selector: 'div#ab_name span' }
         ]
       }
     ]
@@ -23,10 +24,10 @@ module.exports =
         selector: 'input[name="q"]'
         actions: [
           { action: 'value', value: 'Google Search' }
-          { action: 'click', selector: 'input[name="notExist"]' }
+          { action: 'click', selector: 'input[name="btnk"]' }
         ]
         conditions: [
-          { value: '', property: 'value' }
+          { value: 'Not this search', property: 'value', selector: 'form input[type="text"]' }
         ]
       }
     ]
@@ -56,7 +57,7 @@ module.exports =
       test.done()
 
   'test effects of actions':
-    'forwards context object and continue the Spooky flow on success': (test) ->
+    'forwards context object on success': (test) ->
       test.expect 1
 
       context =
@@ -80,6 +81,87 @@ module.exports =
           if log.space is 'phantom' and
              log.message.match /^Done [0-9]+ steps in [0-9]+ms/
             test.done()
+
+        # Simulate actions
+        spooky.then ->
+          @sendKeys 'input[name="q"]', 'Google Search'
+        spooky.then ->
+          @click 'input[name="btnG"]'
+
+        globals.in.send context
+        globals.in.disconnect()
+
+        # Run Spooky
+        spooky.run()
+
+    'increments the offset when *running* on success': (test) ->
+      test.expect 2
+
+      context =
+        rules: globals.testRulesSuccess
+        offset: 0
+        counts:
+          actions: 0
+
+      globals.out.on 'data', (data) ->
+        test.deepEqual data, context
+
+      globals.exit.on 'data', (data) ->
+        test.ok false, 'should not exit because the selector and value match'
+
+      spooky = new Spooky {}, ->
+        context.spooky = spooky
+        spooky.start 'https://www.google.com'
+
+        # Capture logging from other environments
+        spooky.on 'log', (log) ->
+          # Test offset
+          if log.space is 'remote' and
+             log.message is '[offset]'
+            test.equal context.offset, 1
+
+          # Finish on success
+          if log.space is 'phantom' and
+             log.message.match /^Done [0-9]+ steps in [0-9]+ms/
+            test.done()
+
+        # Simulate actions
+        spooky.then ->
+          @sendKeys 'input[name="q"]', 'Google Search'
+        spooky.then ->
+          @click 'input[name="btnG"]'
+
+        # Set the tester
+        globals.in.send context
+        globals.in.disconnect()
+
+        # Set offset capture flag
+        spooky.thenEvaluate ->
+          console.log '[offset]'
+
+        # Run Spooky
+        spooky.run()
+
+    'forwards context object but sends to EXIT on failure': (test) ->
+      test.expect 3
+
+      context =
+        rules: globals.testRulesFail
+        offset: 0
+        counts:
+          actions: 0
+
+      globals.out.on 'data', (data) ->
+        test.deepEqual data, context
+
+      globals.exit.on 'data', (data) ->
+        test.deepEqual data, context
+        test.equal data.offset, 0
+        test.done()
+
+      spooky = new Spooky {}, ->
+        context.spooky = spooky
+        spooky.start 'https://www.google.com'
 
         # Simulate actions
         spooky.then ->

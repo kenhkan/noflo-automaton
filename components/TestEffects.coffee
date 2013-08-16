@@ -14,10 +14,14 @@ class TestEffects extends noflo.Component
       # When failing and has retried
       exit: new noflo.Port 'object'
 
-    @inPorts.in.on 'data', (data) =>
-      rule = data.rules[data.offset]
-      spooky = data.spooky
+    @inPorts.in.on 'data', (context) =>
+      rule = context.rules[context.offset]
+      spooky = context.spooky
       selector = rule.selector
+
+      # Offset should only be incremented once per rule
+      incrementOffset = _.once ->
+        context.offset++
 
       # Test each condition
       _.each rule.conditions, (condition) =>
@@ -31,17 +35,19 @@ class TestEffects extends noflo.Component
         captureTestOutput = (log) =>
           regexp = new RegExp "^\\[checkpoint\\] \\[#{params.uuid}\\] "
           if log.match regexp
-            # Do nothing if successful as next step will be applied by the next
-            # rule. But if it fails, either retry or exit
-            if (log.replace regexp, '') is 'false'
+            # Increment offset if successful as next step will be applied by
+            # the next rule. But if it fails, either retry or exit
+            if (log.replace regexp, '') is 'true'
+              incrementOffset()
+            else
               # TODO: implement retry
-              @outPorts.exit.send data
+              @outPorts.exit.send context
               @outPorts.exit.disconnect()
 
             # Get rid of listener
             spooky.removeListener 'console', captureTestOutput
 
-        # Place listener
+        # Place listener with `console` because we log in Casper's environment
         spooky.on 'console', captureTestOutput
 
         # Add a validation step
@@ -60,7 +66,7 @@ class TestEffects extends noflo.Component
         ]
 
       # Pass onto the next rule
-      @outPorts.out.send data
+      @outPorts.out.send context
 
     @inPorts.in.on 'disconnect', =>
       @outPorts.out.disconnect()
