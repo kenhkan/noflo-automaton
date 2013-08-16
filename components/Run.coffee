@@ -9,8 +9,11 @@ class Run extends noflo.Component
 
     @inPorts.in.on 'data', (data) =>
       output = []
-      { spooky, offset } = data
-      offset ?= null
+      { spooky, offset, rules } = data
+
+      # Set the offset to `null` (i.e. successful exit) if it has reached the
+      # end of the rules
+      offset = null if not offset? or offset >= rules.length
 
       # Capture output from phantom's console
       spooky.on 'log', (log) ->

@@ -6,6 +6,37 @@ globals = {}
 
 module.exports =
   setUp: (done) ->
+    # Some random rules
+    globals.testRules = [
+      {
+        selector: 'input[name="q"]'
+        actions: [
+          { action: 'value', value: 'Google Search' }
+        ]
+        conditions: [
+          { value: 'Google Search', property: 'value', selector: 'form input[type="text"]' }
+        ]
+      }
+      {
+        selector: 'input[name="q"]'
+        actions: [
+          { action: 'value', value: 'Google Search' }
+        ]
+        conditions: [
+          { value: 'Google Search', property: 'value', selector: 'form input[type="text"]' }
+        ]
+      }
+      {
+        selector: 'input[name="q"]'
+        actions: [
+          { action: 'value', value: 'Google Search' }
+        ]
+        conditions: [
+          { value: 'Google Search', property: 'value', selector: 'form input[type="text"]' }
+        ]
+      }
+    ]
+
     globals.c = Run.getComponent()
     globals.in = noflo.internalSocket.createSocket()
     globals.out = noflo.internalSocket.createSocket()
@@ -38,6 +69,7 @@ module.exports =
         test.doesNotThrow ->
           globals.in.send
             spooky: spooky
+            rules: []
           globals.in.disconnect()
         test.done()
 
@@ -46,6 +78,28 @@ module.exports =
 
   'send output from phantom browser':
     'forwards an output accumulator wrapped by offset': (test) ->
+      test.expect 2
+
+      globals.out.on 'begingroup', (group) ->
+        test.equal group, 2
+
+      globals.out.on 'data', (data) ->
+        test.deepEqual data, []
+        test.done()
+
+      spooky = new Spooky {}, ->
+        spooky.start 'http://www.google.com/'
+
+        globals.in.send
+          spooky: spooky
+          rules: globals.testRules
+          offset: 2
+        globals.in.disconnect()
+
+        # Run Spooky to avoid memory leak
+        spooky.run()
+
+    'sets offset as `null` if it reaches the end successfully': (test) ->
       test.expect 2
 
       globals.out.on 'begingroup', (group) ->
@@ -60,6 +114,8 @@ module.exports =
 
         globals.in.send
           spooky: spooky
+          rules: globals.testRules
+          offset: 3
         globals.in.disconnect()
 
         # Run Spooky to avoid memory leak
@@ -69,7 +125,7 @@ module.exports =
       test.expect 2
 
       globals.out.on 'begingroup', (group) ->
-        test.equal group, 8
+        test.equal group, null
 
       globals.out.on 'data', (data) ->
         test.deepEqual data, [
@@ -89,6 +145,7 @@ module.exports =
 
         globals.in.send
           spooky: spooky
+          rules: []
           offset: 8
         globals.in.disconnect()
 
