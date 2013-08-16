@@ -1,6 +1,6 @@
 noflo = require 'noflo'
 Spooky = require 'spooky'
-Click = require '../components/Click.coffee'
+Extract = require '../components/Extract.coffee'
 
 globals = {}
 
@@ -11,15 +11,16 @@ module.exports =
         selector: 'input[name="q"]'
         actions: [
           { action: 'value', value: 'Google Search' }
-          { action: 'click', selector: 'input[name="btnG"]' }
+          { action: 'extract', selector: '#gbzc #gb_1 .gbts' }
+          { action: 'extract', selector: 'input[name="btnG"]', property: 'value' }
         ]
         conditions: [
-          { condition: '', property: 'value' }
+          { condition: 'Google Search', property: 'value' }
         ]
       }
     ]
 
-    globals.c = Click.getComponent()
+    globals.c = Extract.getComponent()
     globals.in = noflo.internalSocket.createSocket()
     globals.out = noflo.internalSocket.createSocket()
 
@@ -37,69 +38,63 @@ module.exports =
       test.equal typeof globals.c.outPorts.out, 'object'
       test.done()
 
-  'clicking on an element':
-    'ignores and forwards if the action is not a "click"': (test) ->
+  'extracting values out of the page':
+    'extracts the inner text': (test) ->
       test.expect 2
 
       actions = globals.testRules[0].actions
 
-      globals.out.on 'data', (context) ->
-        test.equal context.action, actions[0]
-
       spooky = new Spooky {}, ->
         spooky.start 'http://www.google.com'
 
-        # Capture the logs
+        # Capture logs
         spooky.on 'log', (log) ->
+          # Capture output
+          regexp = /^\[output\] /
+          if log.space is 'remote' and
+             log.message.match regexp
+            output = JSON.parse log.message.replace regexp, ''
+            test.deepEqual output,
+              offset: 0
+              selector: '#gbzc #gb_1 .gbts'
+              property: null
+              value: 'Search'
+
+          # Test case completes
           regexp = /^Done ([0-9]+) steps in/
-          if log.space is 'phantom'
+          if log.space is 'phantom' and
+             log.message.match regexp
             [_regexp, count] = log.message.match regexp
-            test.equal count, '2'
+            test.equal count, '3'
             test.done()
 
-        # This is ignored
         globals.in.send
           spooky: spooky
-          action: actions[0]
+          action: actions[1]
+          offset: 0
         globals.in.disconnect()
 
         spooky.run()
 
-    'does not forward if OUT is not attached': (test) ->
-      test.expect 1
-      globals.c.outPorts.out.detach()
-
-      actions = globals.testRules[0].actions
-
-      globals.out.on 'data', (context) ->
-        test.ok false, 'should not receive anything if detached'
-
-      spooky = new Spooky {}, ->
-        spooky.start 'http://www.google.com'
-
-        # Capture the logs
-        spooky.on 'log', (log) ->
-          regexp = /^Done ([0-9]+) steps in/
-          if log.space is 'phantom'
-            [_regexp, count] = log.message.match regexp
-            test.equal count, '2'
-            test.done()
-
-        # This is ignored
-        globals.in.send
-          spooky: spooky
-          action: actions[0]
-        globals.in.disconnect()
-
-        spooky.run()
-
-    'click if it is a "click"': (test) ->
-      test.expect 1
+    'extracts a property value': (test) ->
+      test.expect 2
 
       actions = globals.testRules[0].actions
 
       spooky = new Spooky {}, ->
         spooky.start 'http://www.google.com'
+
+        # Capture logs
+        spooky.on 'log', (log) ->
+          regexp = /^\[output\] /
+          if log.space is 'remote' and
+             log.message.match regexp
+            output = JSON.parse log.message.replace regexp, ''
+            test.deepEqual output,
+              offset: 0
+              selector: 'input[name="btnG"]'
+              property: 'value'
+              value: 'Google Search'
 
         # Capture the logs
         spooky.on 'log', (log) ->
@@ -109,10 +104,10 @@ module.exports =
             test.equal count, '3'
             test.done()
 
-        # This is executed
         globals.in.send
           spooky: spooky
-          action: actions[1]
+          action: actions[2]
+          offset: 0
         globals.in.disconnect()
 
         spooky.run()
