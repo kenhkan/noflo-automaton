@@ -154,3 +154,26 @@ inbound object, which follows the protocol of:
   as well as forwarded to OUT upon completion.
 * **counts**: This is a hash of counters used by some components in order to
   track when to quit upon repeated failures.
+
+## Action Runners
+
+At the heart of automaton is the action runners. These are the actual
+components applying the rules onto the page. An action runner is simply a
+component of this repository that accepts a context object of the following
+protocol:
+
+* **spooky**: The SpookyJS object on which it applies the action
+* **action**: The action extracted from the context object for the runner to
+  apply
+
+The runner checks rather it should act on it by examining `action.action`,
+which is a string denoting the name of the action. If it is qualified to handle
+it, it should act on it and not forward the context object.
+
+On the other hand, if it does not know how to handle it, it should forward the
+context object as-is to its OUT port. The runner should also check if the OUT
+port is attached before sending.
+
+Runners should attach themselves to either the `automaton/TestActions`
+component or other runners. This cascading structure allows certain runners to
+always take precedence over others.
