@@ -11,7 +11,7 @@ module.exports =
         selector: 'input[name="q"]'
         actions: [
           { action: 'value', value: 'Google Search' }
-          { action: 'click', selector: 'input[name="btnk"]' }
+          { action: 'click', selector: 'input[name="btnG"]' }
         ]
         conditions: [
           { value: 'Google Search', property: 'value', selector: 'form input[type="text"]' }
@@ -24,7 +24,7 @@ module.exports =
         selector: 'input[name="q"]'
         actions: [
           { action: 'value', value: 'Google Search' }
-          { action: 'click', selector: 'input[name="btnk"]' }
+          { action: 'click', selector: 'input[name="btnG"]' }
         ]
         conditions: [
           { value: 'Not this search', property: 'value', selector: 'form input[type="text"]' }

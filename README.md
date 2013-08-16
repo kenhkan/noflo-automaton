@@ -44,8 +44,8 @@ is optional.
 Note that jQuery and Underscore.js are always injected unless they're included
 on the page. Manual injection of those two libraries may result in conflict.
 
-The graph then outputs to either port, with the **status** wrapping as group.
-**status** is `null` if successful and the offset of the last executed rule if
+The graph outputs to the OUT port, with the **status** wrapping as group.
+**status** is `null` if successful or the offset of the last executed rule if
 failed.
 
 * Outport **out**: The accumulated output from executing all the steps. This is
