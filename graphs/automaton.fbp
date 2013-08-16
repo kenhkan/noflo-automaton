@@ -15,3 +15,4 @@ SwitchActions() OUT -> IN Click(automaton/Click)
 
 TestEffects() EXIT -> IN Run(automaton/Run)
 Iterate() EXIT -> IN Run()
+SwitchActions() EXIT -> IN Run()
