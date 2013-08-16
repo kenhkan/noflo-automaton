@@ -15,8 +15,8 @@ module.exports =
           { action: 'click', selector: '.bar' }
         ]
         conditions: [
-          { condition: 'Foo' }
-          { condition: 'Bar', selector: '.bar' }
+          { value: 'Foo' }
+          { value: 'Bar', selector: '.bar' }
         ]
       }
       {
@@ -25,7 +25,7 @@ module.exports =
           { action: 'click' }
         ]
         conditions: [
-          { condition: 'Bar' }
+          { value: 'Bar' }
         ]
       }
     ]

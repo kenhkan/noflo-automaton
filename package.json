@@ -20,7 +20,9 @@
     "noflo": "~0.4.0",
     "underscore": "~1.5.1",
     "spooky": "~0.2.3",
-    "uuid": "~1.4.1"
+    "uuid": "~1.4.1",
+    "noflo-core": "~0.1.1",
+    "noflo-strings": "~0.1.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -38,13 +40,12 @@
   ],
   "noflo": {
     "components": {
-      "TestExistence": "components/TestExistence.coffee",
-      "RunActions": "components/RunActions.coffee",
-      "WaitForEffects": "components/WaitForEffects.coffee",
+      "TestActions": "components/TestActions.coffee",
       "TestEffects": "components/TestEffects.coffee",
       "Iterate": "components/Iterate.coffee",
       "Setup": "components/Setup.coffee",
-      "Run": "components/Run.coffee"
+      "Run": "components/Run.coffee",
+      "Click": "components/Click.coffee"
     },
     "graphs": {
       "Automaton": "graphs/Automaton.fbp"

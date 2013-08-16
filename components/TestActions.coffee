@@ -5,11 +5,11 @@ uuid = require 'uuid'
 class TestActions extends noflo.Component
   constructor: ->
     @inPorts =
-      in: new noflo.Port
+      in: new noflo.ArrayPort 'object'
     @outPorts =
-      out: new noflo.Port
-      action: new noflo.ArrayPort
-      exit: new noflo.Port
+      out: new noflo.Port 'object'
+      action: new noflo.ArrayPort 'object'
+      exit: new noflo.Port 'object'
 
     @inPorts.in.on 'data', (context) =>
       rule = context.rules[context.offset]

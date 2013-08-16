@@ -113,9 +113,9 @@ class Setup extends noflo.Component
       return false unless valid
 
       for condition in rule.conditions
-        unless _.isObject(condition) and _.isString(condition.condition)
+        unless _.isObject(condition) and _.isString(condition.value)
           valid = false
 
-      return true
+      return valid
 
 exports.getComponent = -> new Setup

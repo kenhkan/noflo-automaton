@@ -3,7 +3,7 @@ noflo = require 'noflo'
 class Run extends noflo.Component
   constructor: ->
     @inPorts =
-      in: new noflo.Port 'object'
+      in: new noflo.ArrayPort 'object'
     @outPorts =
       out: new noflo.Port 'object'
 
