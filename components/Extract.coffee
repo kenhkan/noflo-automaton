@@ -28,7 +28,7 @@ class Extract extends noflo.Component
               el.innerText
 
             # Output for capture
-            output = JSON.stringify
+            console.log '[output] ' + JSON.stringify
               offset: offset
               selector: selector
               property: prop

@@ -45,7 +45,9 @@
       "Iterate": "components/Iterate.coffee",
       "Setup": "components/Setup.coffee",
       "Run": "components/Run.coffee",
-      "Click": "components/Click.coffee"
+      "Click": "components/Click.coffee",
+      "Extract": "components/Extract.coffee",
+      "Fill": "components/Fill.coffee"
     },
     "graphs": {
       "Automaton": "graphs/Automaton.fbp"

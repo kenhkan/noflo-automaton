@@ -28,10 +28,12 @@ class Setup extends noflo.Component
     return unless @url and @rules
 
     # Input validity check
-    unless @isValidRuleObject @rules
-      error = 'Rule object is not valid'
-    unless @isValidOptionObject @options
-      error = 'Options object is not valid'
+    isValidRuleObject = @isValidRuleObject @rules
+    isValidOptionObject = @isValidOptionObject @options
+    unless isValidRuleObject is true
+      error = isValidRuleObject
+    unless isValidOptionObject is true
+      error = isValidOptionObject
 
     # Send to error on invalid input
     if error?
@@ -39,6 +41,8 @@ class Setup extends noflo.Component
       e.url = @url
       e.rules = @rules
       e.options = @options
+
+      throw e unless @outPorts.error.isAttached()
       @outPorts.error.send e
       @outPorts.error.disconnect()
 
@@ -93,29 +97,32 @@ class Setup extends noflo.Component
 
   # Is the option object valid?
   isValidOptionObject: (options) ->
-    _.every options, (option) ->
+    _.every(options, (option) ->
       not _.isObject option
+    ) or 'Options object is not valid'
 
   # Is the rule object valid?
   isValidRuleObject: (rules) ->
-    _.isArray(rules) and _.every rules, (rule) ->
+    unless _.isArray rules
+      return 'Rule object must be an array'
+
+    _.every rules, (rule) ->
       valid = _.isObject(rule) and
         _.isString(rule.selector) and
         _.isArray(rule.actions) and
         _.isArray(rule.conditions)
 
-      return false unless valid
+      unless valid
+        return 'Rule object must contain a selector, actions, and conditions'
 
       for action in rule.actions
         unless _.isObject(action) and _.isString(action.action)
-          valid = false
-
-      return false unless valid
+          return 'Rule object actions must contain an action property'
 
       for condition in rule.conditions
         unless _.isObject(condition) and _.isString(condition.value)
-          valid = false
+          return 'Rule object conditions must contain a value property'
 
-      return valid
+      return true
 
 exports.getComponent = -> new Setup

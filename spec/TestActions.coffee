@@ -65,6 +65,7 @@ module.exports =
         context =
           spooky: spooky
           action: expectedActionData.shift()
+          offset: 0
         test.deepEqual data, context
 
       globals.out.on 'disconnect', ->

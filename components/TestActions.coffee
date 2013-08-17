@@ -16,17 +16,17 @@ class TestActions extends noflo.Component
       spooky = context.spooky
 
       # Go through each action and send as individual packet
-      _.each rule.actions, (origAction) =>
-        action = _.clone origAction
+      _.each rule.actions, (action) =>
+        _action = _.clone action
         # Use rule's selector by default
-        action.selector ?= rule.selector
+        _action.selector ?= rule.selector
 
         # Create a unique ID to capture test output
-        action.uuid = uuid.v1()
+        _action.uuid = uuid.v1()
 
         # Extract the test output as boolean
         captureTestOutput = (log) =>
-          regexp = new RegExp "^\\[checkpoint\\] \\[#{action.uuid}\\] "
+          regexp = new RegExp "^\\[checkpoint\\] \\[#{_action.uuid}\\] "
           if log.match regexp
             # Exit on failure
             if (log.replace regexp, '') is 'false'
@@ -40,7 +40,7 @@ class TestActions extends noflo.Component
         spooky.on 'console', captureTestOutput
 
         # Test the selector
-        spooky.then [action, ->
+        spooky.then [_action, ->
           # Don't do anything if it passes as it implicitly moves to the next
           # step, but exit on failure
           @waitForSelector selector, (->), ->
@@ -50,7 +50,8 @@ class TestActions extends noflo.Component
         # Do the action
         @outPorts.action.send
           spooky: spooky
-          action: origAction
+          action: _action
+          offset: context.offset
 
       # THEN, set the number of actions and forward context object to OUT
       context.counts.actions = rule.actions.length
