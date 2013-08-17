@@ -16,13 +16,17 @@ class Run extends noflo.Component
       offset = null if not offset? or offset >= rules.length
 
       # Capture output from phantom's console
-      spooky.on 'log', (log) ->
+      captureLogs = (log) ->
         regexp = /^\[output\] /
         if (log.space is 'remote') and (log.message.match regexp)
           output.push JSON.parse log.message.replace regexp, ''
 
+      spooky.on 'log', captureLogs
+
       # Forward packets on completion
       spooky.on 'run.complete', =>
+        spooky.removeListener 'log', captureLogs
+
         @outPorts.out.beginGroup offset
         @outPorts.out.send output
         @outPorts.out.endGroup()

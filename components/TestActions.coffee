@@ -9,7 +9,6 @@ class TestActions extends noflo.Component
     @outPorts =
       out: new noflo.Port 'object'
       action: new noflo.ArrayPort 'object'
-      exit: new noflo.Port 'object'
 
     @inPorts.in.on 'data', (context) =>
       rule = context.rules[context.offset]
@@ -28,10 +27,6 @@ class TestActions extends noflo.Component
         captureTestOutput = (log) =>
           regexp = new RegExp "^\\[checkpoint\\] \\[#{_action.uuid}\\] "
           if log.match regexp
-            # Exit on failure
-            if (log.replace regexp, '') is 'false'
-              @outPorts.exit.send context
-              @outPorts.exit.disconnect()
 
             # Get rid of listener
             spooky.removeListener 'console', captureTestOutput
@@ -42,7 +37,7 @@ class TestActions extends noflo.Component
         # Test the selector
         spooky.then [_action, ->
           # Don't do anything if it passes as it implicitly moves to the next
-          # step, but exit on failure
+          # step
           @waitForSelector selector, (->), ->
             console.log "[checkpoint] [#{uuid}] false"
         ]

@@ -11,8 +11,6 @@ class TestEffects extends noflo.Component
       out: new noflo.Port 'object'
       # When failing but hasn't reached retry limit
       retry: new noflo.Port 'object'
-      # When failing and has retried
-      exit: new noflo.Port 'object'
 
     @inPorts.in.on 'data', (context) =>
       rule = context.rules[context.offset]
@@ -34,35 +32,40 @@ class TestEffects extends noflo.Component
         # Extract the test output as boolean
         captureTestOutput = (log) =>
           regexp = new RegExp "^\\[checkpoint\\] \\[#{params.uuid}\\] "
-          if log.match regexp
-            # Increment offset if successful as next step will be applied by
-            # the next rule. But if it fails, either retry or exit
-            if (log.replace regexp, '') is 'true'
-              incrementOffset()
-            else
-              # TODO: implement retry
-              @outPorts.exit.send context
-              @outPorts.exit.disconnect()
-
+          if log.space is 'remote' and log.message.match regexp
             # Get rid of listener
-            spooky.removeListener 'console', captureTestOutput
+            spooky.removeListener 'log', captureTestOutput
+
+            # TODO: implement retry
+            # Increment offset if successful as next step will be applied by
+            # the next rule. If it fails, retry
+            if (log.message.replace regexp, '') is 'true'
+              incrementOffset()
 
         # Place listener with `console` because we log in Casper's environment
-        spooky.on 'console', captureTestOutput
+        spooky.on 'log', captureTestOutput
 
         # Add a validation step
         spooky.then [params, ->
           # Wait for the specified selector to apply. Then test the condition.
           @waitForSelector selector, ->
+            # Either extract an attribute or the inner HTML
             if property?
               v = @getElementAttribute selector, property
             else
               v = @getHTML selector
-            console.log "[checkpoint] [#{uuid}] #{v is value}"
+
+            # Report validity checkpoint
+            isValid = v is value
+            @evaluate (uuid, isValid) ->
+              console.log "[checkpoint] [#{uuid}] #{isValid}"
+            , uuid, isValid
 
           , ->
-            # Send to exit if it doesn't apply any more
-            console.log "[checkpoint] [#{uuid}] false"
+            # Not valid if timed out
+            @evaluate (uuid) ->
+              console.log "[checkpoint] [#{uuid}] false"
+            , uuid
         ]
 
       # Pass onto the next rule

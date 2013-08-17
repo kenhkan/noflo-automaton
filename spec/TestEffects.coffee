@@ -157,11 +157,17 @@ module.exports =
       globals.exit.on 'data', (data) ->
         test.deepEqual data, context
         test.equal data.offset, 0
-        test.done()
 
       spooky = new Spooky {}, ->
         context.spooky = spooky
         spooky.start 'https://www.google.com'
+
+        # Capture the logs
+        spooky.on 'log', (log) ->
+          regexp = /^Step 7\/7: done/
+          if log.space is 'phantom' and
+             log.message.match regexp
+            test.done()
 
         # Simulate actions
         spooky.then ->
