@@ -60,10 +60,25 @@ class TestEffects extends noflo.Component
               v = @getHTML selector
 
             # Report validity checkpoint
-            isValid = v is value
-            @evaluate (uuid, isValid) ->
+            isValid = @evaluate (uuid, offset, v, value) ->
+              isValid = v is value
               console.log "[checkpoint] [#{uuid}] #{isValid}"
-            , uuid, isValid
+
+              # Report if invalid
+              unless isValid
+                output =
+                  message: 'condition invalid'
+                  offset: offset
+                  expected: value
+                  actual: v
+                console.log "[output] #{JSON.stringify output}"
+
+              # Return validity
+              isValid
+            , uuid, offset, v, value
+
+            # Do not proceed if invalid
+            @exit() unless isValid
 
           , ->
             # Not valid if timed out
@@ -74,6 +89,7 @@ class TestEffects extends noflo.Component
             # Report failing post-condition
             @evaluate (offset, selector, value) ->
               output =
+                message: 'condition selector does not exist'
                 offset:  offset
                 selector: selector
               output.value = value if value?

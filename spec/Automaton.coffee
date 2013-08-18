@@ -56,19 +56,23 @@ module.exports =
         conditions: []
       }
     ]
-    globals.testRulesFailCondition = [
+    globals.testRulesFailAction = [
       {
-        selector: 'input[name="q"]'
+        selector: 'form[name="f"]'
         actions: [
-          { action: 'value', value: 'Google Search' }
+          {
+            action: 'fill'
+            selector: 'form[name="f"]'
+            form:
+              q: 'Search Terms'
+          }
           { action: 'click', selector: 'input[name="btnG"]' }
         ]
         conditions: [
-          { value: 'Not this search', property: 'value', selector: 'form input[type="text"]' }
+          { value: 'Search Terms', property: 'value', selector: 'form input[type="text"]' }
+          { value: 'Search', selector: '#gb_1 .gbts' }
         ]
       }
-    ]
-    globals.testRulesFailAction = [
       {
         selector: 'input[name="q"]'
         actions: [
@@ -76,6 +80,38 @@ module.exports =
         ]
         conditions: [
           { value: 'Search', selector: '#gb_1 .gbts' }
+        ]
+      }
+    ]
+    globals.testRulesFailCondition = [
+      {
+        selector: 'form[name="f"]'
+        actions: [
+          {
+            action: 'fill'
+            selector: 'form[name="f"]'
+            form:
+              q: 'Search Terms'
+          }
+          { action: 'click', selector: 'input[name="btnG"]' }
+        ]
+        conditions: [
+          { value: 'Google Search', property: 'value', selector: 'form input[type="text"]' }
+          { value: 'Search', selector: '#gb_1 .gbts' }
+        ]
+      }
+      {
+        selector: 'form[name="gs"]'
+        actions: [
+          {
+            action: 'fill'
+            form:
+              q: 'Google Search'
+          }
+          { action: 'click', selector: 'button[name="btnG"]' }
+        ]
+        conditions: [
+          { value: 'Not this search', property: 'value', selector: 'form input[type="text"]' }
         ]
       }
     ]
@@ -112,7 +148,8 @@ module.exports =
       hookStdout (output, unhook) ->
         unhook()
         test.deepEqual output, [
-          offset: 0
+          message: 'action selector does not exist'
+          offset: 1
           selector: 'input[name="btnNotExist"]'
         ]
         test.done()
@@ -125,9 +162,10 @@ module.exports =
       hookStdout (output, unhook) ->
         unhook()
         test.deepEqual output, [
+          message: 'condition invalid'
           offset: 0
-          selector: 'form input[type="text"]'
-          value: 'Not this search'
+          expected: 'Google Search'
+          actual: 'Search Terms'
         ]
         test.done()
 

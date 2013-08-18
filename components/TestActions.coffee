@@ -49,6 +49,7 @@ class TestActions extends noflo.Component
             # Report failing action precondition
             @evaluate (offset, selector, value) ->
               output =
+                message: 'action selector does not exist'
                 offset:  offset
                 selector: selector
               output.value = value if value?
