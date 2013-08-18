@@ -29,6 +29,7 @@ class Extract extends noflo.Component
 
             # Output for capture
             console.log '[output] ' + JSON.stringify
+              message: 'value extracted'
               offset: offset
               selector: selector
               property: prop

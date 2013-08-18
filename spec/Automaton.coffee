@@ -44,7 +44,7 @@ module.exports =
           { action: 'click', selector: 'input[name="btnG"]' }
         ]
         conditions: [
-          { value: 'Google Search', property: 'value', selector: 'form input[type="text"]' }
+          { value: 'Search Terms', property: 'value', selector: 'form input[type="text"]' }
           { value: 'Search', selector: '#gb_1 .gbts' }
         ]
       }
@@ -85,14 +85,9 @@ module.exports =
     ]
     globals.testRulesFailCondition = [
       {
-        selector: 'form[name="f"]'
+        selector: 'input[name="q"]'
         actions: [
-          {
-            action: 'fill'
-            selector: 'form[name="f"]'
-            form:
-              q: 'Search Terms'
-          }
+          { action: 'value', value: 'Search Terms'}
           { action: 'click', selector: 'input[name="btnG"]' }
         ]
         conditions: [
@@ -133,6 +128,7 @@ module.exports =
       hookStdout (output, unhook) ->
         unhook()
         test.deepEqual output, [
+          message: 'value extracted'
           offset: 1
           selector: 'a[href="/intl/en/about.html"]'
           property: null

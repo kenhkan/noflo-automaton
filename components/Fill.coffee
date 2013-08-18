@@ -12,7 +12,7 @@ class Fill extends noflo.Component
       { spooky, action } = context
       _action = _.clone action
       _action.form = JSON.stringify action.form
-      _action.submit ?= null
+      _action.submit ?= false
 
       if action.action is 'fill'
         spooky.then [_action, ->
