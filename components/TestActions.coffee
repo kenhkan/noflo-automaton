@@ -11,7 +11,8 @@ class TestActions extends noflo.Component
       action: new noflo.ArrayPort 'object'
 
     @inPorts.in.on 'data', (context) =>
-      rule = context.rules[context.offset]
+      offset = context.offset
+      rule = context.rules[offset]
       spooky = context.spooky
 
       # Go through each action and send as individual packet
@@ -20,14 +21,18 @@ class TestActions extends noflo.Component
         # Use rule's selector by default
         _action.selector ?= rule.selector
 
+        # Default for expected parameters
+        params = _.clone _action
+        params.value ?= null
+        params.offset = offset
+
         # Create a unique ID to capture test output
-        _action.uuid = uuid.v1()
+        params.uuid = uuid.v1()
 
         # Extract the test output as boolean
-        captureTestOutput = (log) =>
-          regexp = new RegExp "^\\[checkpoint\\] \\[#{_action.uuid}\\] "
+        captureTestOutput = (log) ->
+          regexp = new RegExp "^\\[checkpoint\\] \\[#{params.uuid}\\] "
           if log.match regexp
-
             # Get rid of listener
             spooky.removeListener 'console', captureTestOutput
 
@@ -35,18 +40,30 @@ class TestActions extends noflo.Component
         spooky.on 'console', captureTestOutput
 
         # Test the selector
-        spooky.then [_action, ->
+        spooky.then [params, ->
           # Don't do anything if it passes as it implicitly moves to the next
           # step
           @waitForSelector selector, (->), ->
             console.log "[checkpoint] [#{uuid}] false"
+
+            # Report failing action precondition
+            @evaluate (offset, selector, value) ->
+              output =
+                offset:  offset
+                selector: selector
+              output.value = value if value?
+              console.log "[output] #{JSON.stringify output}"
+            , offset, selector, value
+
+            # Do not proceed
+            @exit()
         ]
 
         # Do the action
         @outPorts.action.send
           spooky: spooky
           action: _action
-          offset: context.offset
+          offset: offset
 
       # THEN, set the number of actions and forward context object to OUT
       context.counts.actions = rule.actions.length

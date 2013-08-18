@@ -24,13 +24,16 @@ class Run extends noflo.Component
       spooky.on 'log', captureLogs
 
       # Forward packets on completion
-      spooky.on 'run.complete', =>
+      onComplete = =>
         spooky.removeListener 'log', captureLogs
 
         @outPorts.out.beginGroup offset
         @outPorts.out.send output
         @outPorts.out.endGroup()
         @outPorts.out.disconnect()
+
+      spooky.on 'run.complete', onComplete
+      spooky.on 'exit', onComplete
 
       # Run the goddamn thing
       spooky.run()

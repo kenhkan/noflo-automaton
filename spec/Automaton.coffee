@@ -17,6 +17,8 @@ _hookStdout = (callback) ->
   ->
     process.stdout.write = oldWrite
 
+ # Hook into stdout and call the callback when done with the output and the
+ # unhook function
 hookStdout = (done) ->
   _unhookStdout = _hookStdout (string, encoding, fd) ->
     # Extract output encoded in base64
@@ -54,7 +56,7 @@ module.exports =
         conditions: []
       }
     ]
-    globals.testRulesFail = [
+    globals.testRulesFailA = [
       {
         selector: 'input[name="q"]'
         actions: [
@@ -63,6 +65,18 @@ module.exports =
         ]
         conditions: [
           { value: 'Not this search', property: 'value', selector: 'form input[type="text"]' }
+        ]
+      }
+    ]
+    globals.testRulesFailB = [
+      {
+        selector: 'input[name="q"]'
+        actions: [
+          #{ action: 'value', value: 'Google Search' }
+          { action: 'click', selector: 'input[name="btnNotExist"]' }
+        ]
+        conditions: [
+          { value: 'Search', selector: '#gb_1 .gbts' }
         ]
       }
     ]
@@ -82,6 +96,7 @@ module.exports =
   'the automaton system':
     'successfully run the graph': (test) ->
       hookStdout (output, unhook) ->
+        unhook()
         test.deepEqual output, [
           offset: 1
           selector: 'a[href="/intl/en/about.html"]'
@@ -89,8 +104,20 @@ module.exports =
           value: 'About Google'
         ]
         test.done()
-        unhook()
 
       globals.runAutomaton test,
         url: 'http://www.google.com'
         rules: globals.testRulesSuccess
+
+    'run the graph with failing action (i.e. element does not exist)': (test) ->
+      hookStdout (output, unhook) ->
+        unhook()
+        test.deepEqual output, [
+          offset: 0
+          selector: 'input[name="btnNotExist"]'
+        ]
+        test.done()
+
+      globals.runAutomaton test,
+        url: 'http://www.google.com'
+        rules: globals.testRulesFailB
