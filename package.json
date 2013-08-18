@@ -48,7 +48,8 @@
       "Run": "components/Run.coffee",
       "Click": "components/Click.coffee",
       "Extract": "components/Extract.coffee",
-      "Fill": "components/Fill.coffee"
+      "Fill": "components/Fill.coffee",
+      "Value": "components/Value.coffee"
     },
     "graphs": {
       "Automaton": "graphs/Automaton.fbp"
