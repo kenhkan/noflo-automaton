@@ -49,7 +49,8 @@
       "Click": "components/Click.coffee",
       "Extract": "components/Extract.coffee",
       "Fill": "components/Fill.coffee",
-      "Value": "components/Value.coffee"
+      "Value": "components/Value.coffee",
+      "Missing": "components/Missing.coffee"
     },
     "graphs": {
       "Automaton": "graphs/Automaton.fbp"

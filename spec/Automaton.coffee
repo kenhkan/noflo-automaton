@@ -110,6 +110,17 @@ module.exports =
         ]
       }
     ]
+    globals.testRulesFailMissing = [
+      {
+        selector: 'input[name="q"]'
+        actions: [
+          { action: 'no-such-runner', value: 'Search Terms'}
+        ]
+        conditions: [
+          { value: 'Search', selector: '#gb_1 .gbts' }
+        ]
+      }
+    ]
 
     globals.runAutomaton = (test, context) ->
       fbp = """
@@ -168,3 +179,20 @@ module.exports =
       globals.runAutomaton test,
         url: 'http://www.google.com'
         rules: globals.testRulesFailCondition
+
+    'run with a missing action': (test) ->
+      hookStdout (output, unhook) ->
+        unhook()
+        test.deepEqual output, [
+          message: 'action runner missing'
+          offset: 0
+          action:
+            action: 'no-such-runner'
+            value: 'Search Terms'
+            selector: 'input[name="q"]'
+        ]
+        test.done()
+
+      globals.runAutomaton test,
+        url: 'http://www.google.com'
+        rules: globals.testRulesFailMissing
