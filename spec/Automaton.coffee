@@ -56,7 +56,7 @@ module.exports =
         conditions: []
       }
     ]
-    globals.testRulesFailA = [
+    globals.testRulesFailCondition = [
       {
         selector: 'input[name="q"]'
         actions: [
@@ -68,11 +68,10 @@ module.exports =
         ]
       }
     ]
-    globals.testRulesFailB = [
+    globals.testRulesFailAction = [
       {
         selector: 'input[name="q"]'
         actions: [
-          #{ action: 'value', value: 'Google Search' }
           { action: 'click', selector: 'input[name="btnNotExist"]' }
         ]
         conditions: [
@@ -120,4 +119,18 @@ module.exports =
 
       globals.runAutomaton test,
         url: 'http://www.google.com'
-        rules: globals.testRulesFailB
+        rules: globals.testRulesFailAction
+
+    'run the graph with failing post-condition': (test) ->
+      hookStdout (output, unhook) ->
+        unhook()
+        test.deepEqual output, [
+          offset: 0
+          selector: 'form input[type="text"]'
+          value: 'Not this search'
+        ]
+        test.done()
+
+      globals.runAutomaton test,
+        url: 'http://www.google.com'
+        rules: globals.testRulesFailCondition

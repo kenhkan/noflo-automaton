@@ -13,18 +13,22 @@ class TestEffects extends noflo.Component
       retry: new noflo.Port 'object'
 
     @inPorts.in.on 'data', (context) =>
-      rule = context.rules[context.offset]
+      offset = context.offset
+      rule = context.rules[offset]
       spooky = context.spooky
       selector = rule.selector
 
       # Offset should only be incremented once per rule
       incrementOffset = _.once ->
-        context.offset++
+        offset++
 
       # Test each condition
       _.each rule.conditions, (condition) =>
         params = _.clone condition
         params.selector ?= selector
+
+        # Default for expected parameters
+        params.offset = offset
 
         # Create a unique ID to capture test output
         params.uuid = uuid.v1()
@@ -66,6 +70,18 @@ class TestEffects extends noflo.Component
             @evaluate (uuid) ->
               console.log "[checkpoint] [#{uuid}] false"
             , uuid
+
+            # Report failing post-condition
+            @evaluate (offset, selector, value) ->
+              output =
+                offset:  offset
+                selector: selector
+              output.value = value if value?
+              console.log "[output] #{JSON.stringify output}"
+            , offset, selector, value
+
+            # Do not proceed
+            @exit()
         ]
 
       # Pass onto the next rule
