@@ -1,7 +1,7 @@
 {
   "name": "noflo-automaton",
   "description": "Automate navigation on the web based on Casper.js",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": {
     "name": "Kenneth Kan",
     "email": "kenhkan@gmail.com"
