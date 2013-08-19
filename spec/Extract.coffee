@@ -55,6 +55,7 @@ module.exports =
              log.message.match regexp
             output = JSON.parse log.message.replace regexp, ''
             test.deepEqual output,
+              message: 'value extracted'
               offset: 0
               selector: '#gbzc #gb_1 .gbts'
               property: null
@@ -91,6 +92,7 @@ module.exports =
              log.message.match regexp
             output = JSON.parse log.message.replace regexp, ''
             test.deepEqual output,
+              message: 'value extracted'
               offset: 0
               selector: 'input[name="btnG"]'
               property: 'value'

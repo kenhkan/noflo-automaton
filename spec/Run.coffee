@@ -73,7 +73,6 @@ module.exports =
           globals.in.disconnect()
         test.done()
 
-        # Run Spooky to avoid memory leak
         spooky.run()
 
   'send output from phantom browser':
@@ -96,7 +95,6 @@ module.exports =
           offset: 2
         globals.in.disconnect()
 
-        # Run Spooky to avoid memory leak
         spooky.run()
 
     'sets offset as `null` if it reaches the end successfully': (test) ->
@@ -118,7 +116,6 @@ module.exports =
           offset: 3
         globals.in.disconnect()
 
-        # Run Spooky to avoid memory leak
         spooky.run()
 
     'output accumulator stores output from phantom browser': (test) ->
@@ -149,5 +146,4 @@ module.exports =
           offset: 8
         globals.in.disconnect()
 
-        # Run Spooky to avoid memory leak
         spooky.run()

@@ -1,3 +1,4 @@
+_ = require 'underscore'
 noflo = require 'noflo'
 
 class Run extends noflo.Component
@@ -24,7 +25,7 @@ class Run extends noflo.Component
       spooky.on 'log', captureLogs
 
       # Forward packets on completion
-      onComplete = =>
+      onComplete = _.once =>
         spooky.removeListener 'log', captureLogs
 
         @outPorts.out.beginGroup offset

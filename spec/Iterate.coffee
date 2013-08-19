@@ -31,11 +31,11 @@ module.exports =
     globals.c = Iterate.getComponent()
     globals.in = noflo.internalSocket.createSocket()
     globals.out = noflo.internalSocket.createSocket()
-    globals.exit = noflo.internalSocket.createSocket()
+    globals.run = noflo.internalSocket.createSocket()
 
     globals.c.inPorts.in.attach globals.in
     globals.c.outPorts.out.attach globals.out
-    globals.c.outPorts.exit.attach globals.exit
+    globals.c.outPorts.run.attach globals.run
 
     done()
 
@@ -46,7 +46,7 @@ module.exports =
 
     'should have an output port': (test) ->
       test.equal typeof globals.c.outPorts.out, 'object'
-      test.equal typeof globals.c.outPorts.exit, 'object'
+      test.equal typeof globals.c.outPorts.run, 'object'
       test.done()
 
   'iterating through the loop':
@@ -69,8 +69,8 @@ module.exports =
         offset: 0
       globals.in.disconnect()
 
-    'exits successfully if rule does not exist': (test) ->
-      globals.exit.on 'data', (data) ->
+    '(sends to) run if rule does not exist': (test) ->
+      globals.run.on 'data', (data) ->
         test.equal data.offset, null
         test.done()
 
