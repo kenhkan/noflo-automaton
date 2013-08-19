@@ -23,12 +23,10 @@ module.exports =
     globals.in = noflo.internalSocket.createSocket()
     globals.out = noflo.internalSocket.createSocket()
     globals.action = noflo.internalSocket.createSocket()
-    globals.exit = noflo.internalSocket.createSocket()
 
     globals.c.inPorts.in.attach globals.in
     globals.c.outPorts.out.attach globals.out
     globals.c.outPorts.action.attach globals.action
-    globals.c.outPorts.exit.attach globals.exit
 
     done()
 
@@ -40,7 +38,6 @@ module.exports =
     'should have an output port': (test) ->
       test.equal typeof globals.c.outPorts.out, 'object'
       test.equal typeof globals.c.outPorts.action, 'object'
-      test.equal typeof globals.c.outPorts.exit, 'object'
       test.done()
 
   'action switching':
@@ -81,10 +78,10 @@ module.exports =
         # Run Spooky to avoid memory leak
         spooky.run()
 
-    'tests whether the element required by the action exists': (test) ->
+    'outputs and exits unless the element required by the action exists': (test) ->
       test.expect 1
 
-      # Remove the first action so we can test only the failing action
+      # Remove the first action to test only the failing action
       globals.testRules[0].actions.shift()
       rule = globals.testRules[0]
       context =
@@ -93,26 +90,27 @@ module.exports =
         counts:
           actions: 0
 
-      # The selector test fails and forwards to EXIT
-      globals.exit.on 'data', (data) ->
-        test.deepEqual data, context
-        test.done()
-
       globals.action.on 'data', (data) ->
         data.spooky.then ->
-          console.log '[success]'
+          @evaluate ->
+            console.log '[success]'
 
       spooky = new Spooky {}, ->
         context.spooky = spooky
         spooky.start 'http://www.google.com'
 
         # It should not proceed beyond the action selector test
-        spooky.on 'console', (log) ->
-          if log is '[success]'
+        spooky.on 'log', (log) ->
+          if log.message.match /^\[output\] /
+            test.equal log.message, '[output] {"message":"action selector does not exist","offset":0,"selector":"input[name=\\"notExists\\"]"}'
+          if log.message is '[success]'
             test.ok false, 'should not have passed the test'
 
         globals.in.send context
         globals.in.disconnect()
+
+        spooky.on 'exit', ->
+          test.done()
 
         # Run Spooky to avoid memory leak
         spooky.run()

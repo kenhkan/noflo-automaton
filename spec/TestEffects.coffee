@@ -19,7 +19,19 @@ module.exports =
         ]
       }
     ]
-    globals.testRulesFail = [
+    globals.testRulesFailNoSelector = [
+      {
+        selector: 'input[name="q"]'
+        actions: [
+          { action: 'value', value: 'Google Search' }
+          { action: 'click', selector: 'input[name="btnG"]' }
+        ]
+        conditions: [
+          { value: 'Not this search', property: 'value', selector: '#does-not-exist' }
+        ]
+      }
+    ]
+    globals.testRulesFailInvalidCondition = [
       {
         selector: 'input[name="q"]'
         actions: [
@@ -36,12 +48,10 @@ module.exports =
     globals.in = noflo.internalSocket.createSocket()
     globals.out = noflo.internalSocket.createSocket()
     globals.retry = noflo.internalSocket.createSocket()
-    globals.exit = noflo.internalSocket.createSocket()
 
     globals.c.inPorts.in.attach globals.in
     globals.c.outPorts.out.attach globals.out
     globals.c.outPorts.retry.attach globals.retry
-    globals.c.outPorts.exit.attach globals.exit
 
     done()
 
@@ -53,7 +63,6 @@ module.exports =
     'should have an output port': (test) ->
       test.equal typeof globals.c.outPorts.out, 'object'
       test.equal typeof globals.c.outPorts.retry, 'object'
-      test.equal typeof globals.c.outPorts.exit, 'object'
       test.done()
 
   'test effects of actions':
@@ -69,15 +78,18 @@ module.exports =
       globals.out.on 'data', (data) ->
         test.deepEqual data, context
 
-      globals.exit.on 'data', (data) ->
-        test.ok false, 'should not exit because the selector and value match'
-
       spooky = new Spooky {}, ->
         context.spooky = spooky
         spooky.start 'https://www.google.com'
 
         # Successful when we get a confirmation from Casper
         spooky.on 'log', (log) ->
+          # Should not fail
+          if log.space is 'remote' and
+             log.message.match /^\[checkpoint\] .+ false$/
+            test.ok false, 'should not fail'
+
+          # Finish
           if log.space is 'phantom' and
              log.message.match /^Done [0-9]+ steps in [0-9]+ms/
             test.done()
@@ -106,15 +118,17 @@ module.exports =
       globals.out.on 'data', (data) ->
         test.deepEqual data, context
 
-      globals.exit.on 'data', (data) ->
-        test.ok false, 'should not exit because the selector and value match'
-
       spooky = new Spooky {}, ->
         context.spooky = spooky
         spooky.start 'https://www.google.com'
 
         # Capture logging from other environments
         spooky.on 'log', (log) ->
+          # Should not fail
+          if log.space is 'remote' and
+             log.message.match /^\[checkpoint\] .+ false$/
+            test.ok false, 'should not fail'
+
           # Test offset
           if log.space is 'remote' and
              log.message is '[offset]'
@@ -142,11 +156,12 @@ module.exports =
         # Run Spooky
         spooky.run()
 
-    'forwards context object but sends to EXIT on failure': (test) ->
-      test.expect 3
+  'failing cases':
+    'the condition selector does not exist': (test) ->
+      test.expect 2
 
       context =
-        rules: globals.testRulesFail
+        rules: globals.testRulesFailNoSelector
         offset: 0
         counts:
           actions: 0
@@ -154,9 +169,43 @@ module.exports =
       globals.out.on 'data', (data) ->
         test.deepEqual data, context
 
-      globals.exit.on 'data', (data) ->
+      spooky = new Spooky {}, ->
+        context.spooky = spooky
+        spooky.start 'https://www.google.com'
+
+        # Capture the logs
+        spooky.on 'log', (log) ->
+          # Capture output
+          regexp = /^\[output\] /
+          if log.space is 'remote' and
+             log.message.match regexp
+            output = JSON.parse log.message.replace regexp, ''
+            test.equal output.message, 'condition selector does not exist'
+            test.done()
+
+        # Simulate actions
+        spooky.then ->
+          @sendKeys 'input[name="q"]', 'Google Search'
+        spooky.then ->
+          @click 'input[name="btnG"]'
+
+        globals.in.send context
+        globals.in.disconnect()
+
+        # Run Spooky
+        spooky.run()
+
+    'the condition is invalid': (test) ->
+      test.expect 2
+
+      context =
+        rules: globals.testRulesFailInvalidCondition
+        offset: 0
+        counts:
+          actions: 0
+
+      globals.out.on 'data', (data) ->
         test.deepEqual data, context
-        test.equal data.offset, 0
 
       spooky = new Spooky {}, ->
         context.spooky = spooky
@@ -164,9 +213,12 @@ module.exports =
 
         # Capture the logs
         spooky.on 'log', (log) ->
-          regexp = /^Step 7\/7: done/
-          if log.space is 'phantom' and
+          # Capture output
+          regexp = /^\[output\] /
+          if log.space is 'remote' and
              log.message.match regexp
+            output = JSON.parse log.message.replace regexp, ''
+            test.equal output.message, 'condition invalid'
             test.done()
 
         # Simulate actions

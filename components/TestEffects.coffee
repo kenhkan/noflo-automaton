@@ -20,7 +20,7 @@ class TestEffects extends noflo.Component
 
       # Offset should only be incremented once per rule
       incrementOffset = _.once ->
-        offset++
+        context.offset++
 
       # Test each condition
       _.each rule.conditions, (condition) =>
