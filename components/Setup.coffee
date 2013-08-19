@@ -24,6 +24,12 @@ class Setup extends noflo.Component
   setup: ->
     @options ?= {}
 
+    # Always add jQuery
+    _.extend @options,
+      clientScripts: [
+        './vendor/jquery-2.0.3.min.js'
+      ]
+
     # Only continue if we have both URL and rules
     return unless @url and @rules
 
@@ -64,7 +70,6 @@ class Setup extends noflo.Component
     spooky = new Spooky
       casper: options
     , (error) =>
-
       # Send to error if initialization fails
       if error
         e = new Error 'Failed to initialize SpookyJS'
@@ -97,9 +102,7 @@ class Setup extends noflo.Component
 
   # Is the option object valid?
   isValidOptionObject: (options) ->
-    _.every(options, (option) ->
-      not _.isObject option
-    ) or 'Options object is not valid'
+    _.isObject(options) or 'Options object is not valid'
 
   # Is the rule object valid?
   isValidRuleObject: (rules) ->

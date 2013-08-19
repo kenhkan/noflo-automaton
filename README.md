@@ -41,8 +41,8 @@ To use noflo-automaton, you only need to interface with the
 Options must be passed in before URL and rules ports disconnect given that it
 is optional.
 
-Note that jQuery and Underscore.js are always injected unless they're included
-on the page. Manual injection of those two libraries may result in conflict.
+Note that jQuery (v2.0.3) is always injected unless it is already included on
+the page. Manual injection may result in conflict.
 
 The graph outputs to the OUT port, with the **status** wrapping as group.
 **status** is `null` if successful or the offset of the last executed rule if

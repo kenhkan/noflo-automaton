@@ -137,10 +137,7 @@ module.exports =
         actions: [{ action: '' }]
         conditions: [{ condition: '' }]
       ]
-      globals.options.send
-        invalid:
-          dictionary: 'when'
-          it: 'is nested'
+      globals.options.send false
       globals.url.disconnect()
       globals.rules.disconnect()
       globals.options.disconnect()
@@ -175,6 +172,27 @@ module.exports =
         # Run Spooky to avoid memory leak
         data.spooky.run()
         test.done()
+
+      globals.url.send globals.testUrl
+      globals.rules.send globals.testRules
+      globals.url.disconnect()
+      globals.rules.disconnect()
+
+    'automatically injects jQuery': (test) ->
+      globals.out.on 'data', (data) ->
+        data.spooky.on 'log', (log) ->
+          regexp = /^\[output\] /
+          if log.space is 'remote' and
+             log.message.match regexp
+            output = log.message.replace regexp, ''
+            test.done() if output is 'true'
+
+        data.spooky.then ->
+          @evaluate ->
+            console.log "[output] #{window.jQuery?}"
+
+        # Run Spooky to avoid memory leak
+        data.spooky.run()
 
       globals.url.send globals.testUrl
       globals.rules.send globals.testRules
