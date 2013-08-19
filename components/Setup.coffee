@@ -105,8 +105,10 @@ class Setup extends noflo.Component
   isValidRuleObject: (rules) ->
     unless _.isArray rules
       return 'Rule object must be an array'
+    unless rules.length > 0
+      return 'Empty rule object'
 
-    _.every rules, (rule) ->
+    for rule in rules
       valid = _.isObject(rule) and
         _.isString(rule.selector) and
         _.isArray(rule.actions) and

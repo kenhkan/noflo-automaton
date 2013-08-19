@@ -58,13 +58,71 @@ module.exports =
       test.done()
 
   'preconditions':
-    'receives a valid rule object': (test) ->
+    'rule object is an array': (test) ->
       globals.error.on 'data', (data) ->
-        test.equal data.message, 'Rule object is not valid'
+        test.equal data.message, 'Rule object must be an array'
         test.done()
 
       globals.url.send globals.testUrl
       globals.rules.send {}
+      globals.url.disconnect()
+      globals.rules.disconnect()
+
+    'rule object must contain at least one rule': (test) ->
+      globals.error.on 'data', (data) ->
+        test.equal data.message, 'Empty rule object'
+        test.done()
+
+      globals.url.send globals.testUrl
+      globals.rules.send []
+      globals.url.disconnect()
+      globals.rules.disconnect()
+
+    'rule object has a selector, actions, and conditions': (test) ->
+      globals.error.on 'data', (data) ->
+        test.equal data.message, 'Rule object must contain a selector, actions, and conditions'
+        test.done()
+
+      globals.url.send globals.testUrl
+      globals.rules.send [
+        selector: '.foo'
+      ]
+      globals.url.disconnect()
+      globals.rules.disconnect()
+
+    'actions in rule object must have an action property': (test) ->
+      globals.error.on 'data', (data) ->
+        test.equal data.message, 'Rule object actions must contain an action property'
+        test.done()
+
+      globals.url.send globals.testUrl
+      globals.rules.send [
+        selector: '.foo'
+        actions: [
+          {}
+        ]
+        conditions: [
+          { value: 'Foo' }
+        ]
+      ]
+      globals.url.disconnect()
+      globals.rules.disconnect()
+
+    'conditions in rule object must have a value property': (test) ->
+      globals.error.on 'data', (data) ->
+        test.equal data.message, 'Rule object conditions must contain a value property'
+        test.done()
+
+      globals.url.send globals.testUrl
+      globals.rules.send [
+        selector: '.foo'
+        actions: [
+          { action: 'click' }
+        ]
+        conditions: [
+          {}
+        ]
+      ]
       globals.url.disconnect()
       globals.rules.disconnect()
 
@@ -74,7 +132,11 @@ module.exports =
         test.done()
 
       globals.url.send globals.testUrl
-      globals.rules.send []
+      globals.rules.send [
+        selector: ''
+        actions: [{ action: '' }]
+        conditions: [{ condition: '' }]
+      ]
       globals.options.send
         invalid:
           dictionary: 'when'
