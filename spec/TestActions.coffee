@@ -78,8 +78,8 @@ module.exports =
         # Run Spooky to avoid memory leak
         spooky.run()
 
-    'outputs and exits unless the element required by the action exists': (test) ->
-      test.expect 1
+    'outputs and skips one (i.e. the action) if the element required by the action does not exist': (test) ->
+      test.expect 2
 
       # Remove the first action to test only the failing action
       globals.testRules[0].actions.shift()
@@ -93,7 +93,14 @@ module.exports =
       globals.action.on 'data', (data) ->
         data.spooky.then ->
           @evaluate ->
-            console.log '[success]'
+            # Hack: see TestActions on `bypass()`
+            if window._bypass is 0
+              console.log '[skipped]'
+        data.spooky.then ->
+          @evaluate ->
+            # Hack: see TestActions on `bypass()`
+            if window._bypass > 0
+              console.log '[not-skipped]'
 
       spooky = new Spooky {}, ->
         context.spooky = spooky
@@ -103,13 +110,15 @@ module.exports =
         spooky.on 'log', (log) ->
           if log.message.match /^\[output\] /
             test.equal log.message, '[output] {"message":"action selector does not exist","offset":0,"selector":"input[name=\\"notExists\\"]"}'
-          if log.message is '[success]'
-            test.ok false, 'should not have passed the test'
+          if log.message is '[skipped]'
+            test.ok false, 'the next step should have been skipped'
+          if log.message is '[not-skipped]'
+            test.ok true
 
         globals.in.send context
         globals.in.disconnect()
 
-        spooky.on 'exit', ->
+        spooky.on 'run.complete', ->
           test.done()
 
         # Run Spooky to avoid memory leak

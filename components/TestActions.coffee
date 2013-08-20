@@ -42,7 +42,7 @@ class TestActions extends noflo.Component
         # Test the selector
         spooky.then [params, ->
           # Don't do anything if it passes as it implicitly moves to the next
-          # step
+          # step. Otherwise, bypass the action.
           @waitForSelector selector, (->), ->
             console.log "[checkpoint] [#{uuid}] false"
 
@@ -54,10 +54,16 @@ class TestActions extends noflo.Component
                 selector: selector
               output.value = value if value?
               console.log "[output] #{JSON.stringify output}"
+
+              # Make action aware not to execute if it's invalid. When 1.1
+              # becomes stable and SpookyJS supports that, we can use
+              # `bypass()`.
+              window._bypass ?= 0
+              window._bypass++
             , offset, selector, value
 
-            # Do not proceed
-            @exit()
+          # This should be used instead of the hack above when 1.1 is supported
+          #@bypass 1
         ]
 
         # Do the action

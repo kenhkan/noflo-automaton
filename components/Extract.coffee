@@ -20,22 +20,26 @@ class Extract extends noflo.Component
         # Execute in browser space for output
         spooky.then [_action, ->
           @evaluate (offset, selector, prop) ->
-            # Get the text if prop isn't defined
-            elems = $(selector)
-            if prop?
-              values = elems.map (i, elem) ->
-                elem.getAttribute prop
+            # Hack: see TestActions on `bypass()`
+            if window._bypass > 0
+              window._bypass--
             else
-              values = elems.map (i, elem) ->
-                elem.innerText
+              # Get the text if prop isn't defined
+              elems = $(selector)
+              if prop?
+                values = elems.map (i, elem) ->
+                  elem.getAttribute prop
+              else
+                values = elems.map (i, elem) ->
+                  elem.innerText
 
-            ## Output for capture
-            console.log '[output] ' + JSON.stringify
-              message: 'values extracted'
-              offset: offset
-              selector: selector
-              property: prop
-              values: values.toArray()
+              ## Output for capture
+              console.log '[output] ' + JSON.stringify
+                message: 'values extracted'
+                offset: offset
+                selector: selector
+                property: prop
+                values: values.toArray()
 
           # Need to use `prop` instead of `property` internally because of some
           # weird Casper.js peculiarity
