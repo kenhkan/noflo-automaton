@@ -13,6 +13,7 @@ module.exports =
           { action: 'value', value: 'Google Search' }
           { action: 'extract', selector: '#gbzc #gb_1 .gbts' }
           { action: 'extract', selector: 'input[name="btnG"]', property: 'value' }
+          { action: 'extract', selector: 'img', property: 'src' }
         ]
         conditions: [
           { condition: 'Google Search', property: 'value' }
@@ -26,6 +27,16 @@ module.exports =
 
     globals.c.inPorts.in.attach globals.in
     globals.c.outPorts.out.attach globals.out
+
+    globals.setupSpooky = (callback) ->
+      options =
+        casper:
+          clientScripts: [
+            './vendor/jquery-2.0.3.min.js'
+          ]
+
+      spooky = new Spooky options, ->
+        callback spooky
 
     done()
 
@@ -44,7 +55,7 @@ module.exports =
 
       actions = globals.testRules[0].actions
 
-      spooky = new Spooky {}, ->
+      globals.setupSpooky (spooky) ->
         spooky.start 'http://www.google.com'
 
         # Capture logs
@@ -55,11 +66,11 @@ module.exports =
              log.message.match regexp
             output = JSON.parse log.message.replace regexp, ''
             test.deepEqual output,
-              message: 'value extracted'
+              message: 'values extracted'
               offset: 0
               selector: '#gbzc #gb_1 .gbts'
               property: null
-              value: 'Search'
+              values: ['Search']
 
           # Test case completes
           regexp = /^Done ([0-9]+) steps in/
@@ -82,7 +93,7 @@ module.exports =
 
       actions = globals.testRules[0].actions
 
-      spooky = new Spooky {}, ->
+      globals.setupSpooky (spooky) ->
         spooky.start 'http://www.google.com'
 
         # Capture logs
@@ -92,11 +103,11 @@ module.exports =
              log.message.match regexp
             output = JSON.parse log.message.replace regexp, ''
             test.deepEqual output,
-              message: 'value extracted'
+              message: 'values extracted'
               offset: 0
               selector: 'input[name="btnG"]'
               property: 'value'
-              value: 'Google Search'
+              values: ['Google Search']
 
         # Capture the logs
         spooky.on 'log', (log) ->
@@ -109,6 +120,46 @@ module.exports =
         globals.in.send
           spooky: spooky
           action: actions[2]
+          offset: 0
+        globals.in.disconnect()
+
+        spooky.run()
+
+    'extracts multiple values': (test) ->
+      test.expect 3
+
+      actions = globals.testRules[0].actions
+
+      globals.setupSpooky (spooky) ->
+        spooky.start 'http://www.google.com'
+
+        # Capture logs
+        spooky.on 'log', (log) ->
+          regexp = /^\[output\] /
+          if log.space is 'remote' and
+             log.message.match regexp
+            output = JSON.parse log.message.replace regexp, ''
+            # Should have an array of images
+            test.equal output.values.length, 2
+            # The rest should match
+            delete output.values
+            test.deepEqual output,
+              message: 'values extracted'
+              offset: 0
+              selector: 'img'
+              property: 'src'
+
+        # Capture the logs
+        spooky.on 'log', (log) ->
+          regexp = /^Done ([0-9]+) steps in/
+          if log.space is 'phantom'
+            [_regexp, count] = log.message.match regexp
+            test.equal count, '3'
+            test.done()
+
+        globals.in.send
+          spooky: spooky
+          action: actions[3]
           offset: 0
         globals.in.disconnect()
 

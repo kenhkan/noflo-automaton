@@ -139,11 +139,11 @@ module.exports =
       hookStdout (output, unhook) ->
         unhook()
         test.deepEqual output, [
-          message: 'value extracted'
+          message: 'values extracted'
           offset: 1
           selector: 'a[href="/intl/en/about.html"]'
           property: null
-          value: 'About Google'
+          values: ['About Google']
         ]
         test.done()
 

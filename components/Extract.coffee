@@ -21,19 +21,21 @@ class Extract extends noflo.Component
         spooky.then [_action, ->
           @evaluate (offset, selector, prop) ->
             # Get the text if prop isn't defined
-            el = document.querySelector selector
-            value = if prop?
-              el.getAttribute prop
+            elems = $(selector)
+            if prop?
+              values = elems.map (i, elem) ->
+                elem.getAttribute prop
             else
-              el.innerText
+              values = elems.map (i, elem) ->
+                elem.innerText
 
-            # Output for capture
+            ## Output for capture
             console.log '[output] ' + JSON.stringify
-              message: 'value extracted'
+              message: 'values extracted'
               offset: offset
               selector: selector
               property: prop
-              value: value
+              values: values.toArray()
 
           # Need to use `prop` instead of `property` internally because of some
           # weird Casper.js peculiarity
