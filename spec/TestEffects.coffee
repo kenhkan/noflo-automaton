@@ -19,6 +19,19 @@ module.exports =
         ]
       }
     ]
+    globals.testRulesSuccessWithoutValue = [
+      {
+        selector: 'input[name="q"]'
+        actions: [
+          { action: 'value', value: 'Google Search' }
+          { action: 'click', selector: 'input[name="btnG"]' }
+        ]
+        conditions: [
+          { value: 'Google Search', property: 'value', selector: 'form input[type="text"]' }
+          { selector: 'div#ab_name span' }
+        ]
+      }
+    ]
     globals.testRulesFailNoSelector = [
       {
         selector: 'input[name="q"]'
@@ -146,6 +159,50 @@ module.exports =
           @click 'input[name="btnG"]'
 
         # Set the tester
+        globals.in.send context
+        globals.in.disconnect()
+
+        # Set offset capture flag
+        spooky.thenEvaluate ->
+          console.log '[offset]'
+
+        # Run Spooky
+        spooky.run()
+
+    'tests for existence if no value is provided': (test) ->
+      test.expect 2
+
+      context =
+        rules: globals.testRulesSuccessWithoutValue
+        offset: 0
+        counts:
+          actions: 0
+
+      globals.out.on 'data', (data) ->
+        test.deepEqual data, context
+
+      spooky = new Spooky {}, ->
+        context.spooky = spooky
+        spooky.start 'https://www.google.com'
+
+        # Capture the logs
+        spooky.on 'log', (log) ->
+          # Test offset
+          if log.space is 'remote' and
+             log.message is '[offset]'
+            test.equal context.offset, 1
+
+          # Finish on success
+          if log.space is 'phantom' and
+             log.message.match /^Done [0-9]+ steps in [0-9]+ms/
+            test.done()
+
+        # Simulate actions
+        spooky.then ->
+          @sendKeys 'input[name="q"]', 'Google Search'
+        spooky.then ->
+          @click 'input[name="btnG"]'
+
         globals.in.send context
         globals.in.disconnect()
 

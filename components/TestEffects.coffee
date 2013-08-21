@@ -26,10 +26,8 @@ class TestEffects extends noflo.Component
       _.each rule.conditions, (condition) =>
         params = _.clone condition
         params.selector ?= selector
-
-        # Default for expected parameters
+        params.value ?= null
         params.offset = offset
-
         # Create a unique ID to capture test output
         params.uuid = uuid.v1()
 
@@ -53,15 +51,20 @@ class TestEffects extends noflo.Component
         spooky.then [params, ->
           # Wait for the specified selector to apply. Then test the condition.
           @waitForSelector selector, ->
-            # Either extract an attribute or the inner HTML
-            if property?
-              v = @getElementAttribute selector, property
+            # Extract an attribute
+            v = if property?
+              @getElementAttribute selector, property
+            # The contained HTML
+            else if value?
+              @getHTML selector
+            # Nothing
             else
-              v = @getHTML selector
+              null
 
-            # Report validity checkpoint
+            # Report validity checkpoint, but only if there's a value to
+            # compare. Otherwise, always report `true`.
             isValid = @evaluate (uuid, offset, v, value) ->
-              isValid = v is value
+              isValid = not v? or v is value
               console.log "[checkpoint] [#{uuid}] #{isValid}"
 
               # Report if invalid
