@@ -24,10 +24,13 @@ class Setup extends noflo.Component
   setup: ->
     @options ?= {}
 
+    # Path to vendor scripts
+    vendorPath = "#{__dirname}/../vendor"
+
     # Always add jQuery
     _.extend @options,
       clientScripts: [
-        './vendor/jquery-2.0.3.min.js'
+        "#{vendorPath}/jquery-2.0.3.min.js"
       ]
 
     # Only continue if we have both URL and rules
