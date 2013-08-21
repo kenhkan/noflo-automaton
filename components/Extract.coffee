@@ -31,7 +31,7 @@ class Extract extends noflo.Component
                   elem.getAttribute prop
               else
                 values = elems.map (i, elem) ->
-                  elem.innerText
+                  elem.innerHTML
 
               ## Output for capture
               console.log '[output] ' + JSON.stringify
