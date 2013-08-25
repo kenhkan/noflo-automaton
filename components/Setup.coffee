@@ -128,7 +128,7 @@ class Setup extends noflo.Component
           return 'Rule object actions must contain an action property'
 
       for condition in rule.conditions
-        unless _.isObject(condition) and _.isString(condition.value)
+        unless _.isObject(condition)
           return 'Rule object conditions must contain a value property'
 
       return true
