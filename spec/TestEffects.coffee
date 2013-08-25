@@ -56,6 +56,84 @@ module.exports =
         ]
       }
     ]
+    globals.testRulesSkipOnFailure = [
+      {
+        selector: 'input[name="q"]'
+        actions: [
+          { action: 'value', value: 'Google Search' }
+        ]
+        conditions: [
+          {
+            value: 'Not this search'
+            property: 'value'
+            onFailure: 'retained'
+          }
+        ]
+      }
+      {
+        name: 'skipped'
+        selector: 'input[name="q"]'
+        actions: [
+          { action: 'value', value: 'This is skipped' }
+        ]
+        conditions: [
+          {
+            value: 'This is skipped'
+          }
+        ]
+      }
+      {
+        name: 'retained'
+        selector: 'input[name="q"]'
+        actions: [
+          { action: 'value', value: 'This is retained' }
+        ]
+        conditions: [
+          {
+            value: 'This is NOT retained'
+          }
+        ]
+      }
+    ]
+    globals.testRulesSkipOnTimeoutFailure = [
+      {
+        selector: 'div.does-not-exist'
+        actions: [
+          { action: 'value', value: 'Google Search' }
+        ]
+        conditions: [
+          {
+            value: 'Not this search'
+            property: 'value'
+            onFailure: 'retained'
+          }
+        ]
+      }
+      {
+        name: 'skipped'
+        selector: 'input[name="q"]'
+        actions: [
+          { action: 'value', value: 'This is skipped' }
+        ]
+        conditions: [
+          {
+            value: 'This is skipped'
+          }
+        ]
+      }
+      {
+        name: 'retained'
+        selector: 'input[name="q"]'
+        actions: [
+          { action: 'value', value: 'This is retained' }
+        ]
+        conditions: [
+          {
+            value: 'This is NOT retained'
+          }
+        ]
+      }
+    ]
 
     globals.c = TestEffects.getComponent()
     globals.in = noflo.internalSocket.createSocket()
@@ -286,6 +364,97 @@ module.exports =
 
         globals.in.send context
         globals.in.disconnect()
+
+        # Run Spooky
+        spooky.run()
+
+  'on failure':
+    'find the next offset starting from the current offset by name': (test) ->
+      testEffects = TestEffects.getComponent()
+      rules = globals.testRulesSkipOnFailure
+      nextOffset = testEffects.findNext rules, 0, 'retained'
+
+      test.equal nextOffset, 2
+      test.done()
+
+    'returns null if next offset isnt found': (test) ->
+      testEffects = TestEffects.getComponent()
+      rules = globals.testRulesSkipOnFailure
+      nextOffset = testEffects.findNext rules, 0, 'not-exist'
+
+      test.equal nextOffset, null
+      test.done()
+
+    'skipping to a certain rule by name': (test) ->
+      test.expect 2
+
+      context =
+        rules: globals.testRulesSkipOnFailure
+        offset: 0
+        counts:
+          actions: 0
+
+      globals.out.on 'data', (data) ->
+        test.deepEqual data, context
+
+      spooky = new Spooky {}, ->
+        context.spooky = spooky
+        spooky.start 'https://www.google.com'
+
+        # Capture the logs
+        spooky.on 'log', (log) ->
+          # Capture output
+          regexp = /^\[output\] /
+          if log.space is 'remote' and
+             log.message.match regexp
+            output = JSON.parse log.message.replace regexp, ''
+            test.equal output, 2
+            test.done()
+
+        globals.in.send context
+        globals.in.disconnect()
+
+        # Bypass in browser
+        spooky.then ->
+          @evaluate ->
+            console.log "[output] #{window._bypass}"
+
+        # Run Spooky
+        spooky.run()
+
+    'skipping to a certain rule by name when timed out': (test) ->
+      test.expect 2
+
+      context =
+        rules: globals.testRulesSkipOnTimeoutFailure
+        offset: 0
+        counts:
+          actions: 0
+
+      globals.out.on 'data', (data) ->
+        test.deepEqual data, context
+
+      spooky = new Spooky { casper: { verbose: true } }, ->
+        context.spooky = spooky
+        spooky.start 'https://www.google.com'
+
+        # Capture the logs
+        spooky.on 'log', (log) ->
+          # Capture output
+          regexp = /^\[test\] /
+          if log.space is 'remote' and
+             log.message.match regexp
+            output = JSON.parse log.message.replace regexp, ''
+            test.equal output, 2
+            test.done()
+
+        globals.in.send context
+        globals.in.disconnect()
+
+        # Bypass in browser
+        spooky.then ->
+          @evaluate ->
+            console.log "[test] #{window._bypass}"
 
         # Run Spooky
         spooky.run()
