@@ -84,6 +84,9 @@ class Setup extends noflo.Component
         @outPorts.error.disconnect()
         return
 
+      # Spooky could have unlimited event listeners
+      spooky.setMaxListeners 0
+
       # Any error in Casper is reported
       spooky.on 'error', (e) ->
         console.error e
