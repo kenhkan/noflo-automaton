@@ -53,11 +53,8 @@ class TestEffects extends noflo.Component
         # Place listener with `console` because we log in Casper's environment
         spooky.on 'log', captureTestOutput
 
-        # Stringify params for transfer
-        params = { params: JSON.stringify(params) }
-
         # Add a validation step
-        spooky.then [params, ->
+        spooky.then [{ params: JSON.stringify(params) }, ->
           {
             value
             property
