@@ -6,8 +6,8 @@ EXPORT=SETUP.ERROR:ERROR
  
 # The looper
  
-Setup(automaton/Setup) OUT -> IN Iterate(automaton/Iterate) OUT -> IN TestActions(automaton/TestActions) OUT -> IN TestEffects(automaton/TestEffects) RETRY -> IN TestActions()
-TestEffects() OUT -> IN Iterate() RUN -> IN Run(automaton/Run)
+Setup(automaton/Setup) OUT -> IN Iterate(automaton/Iterate) OUT -> IN TestEffects(automaton/TestEffects) OUT -> IN TestActions(automaton/TestActions)
+TestActions() OUT -> IN Iterate() RUN -> IN Run(automaton/Run)
  
 # Various action runners
  
