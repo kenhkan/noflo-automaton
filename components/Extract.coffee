@@ -23,23 +23,24 @@ class Extract extends noflo.Component
             # Hack: see TestActions on `bypass()`
             if window._bypass > 0
               window._bypass--
-            else
-              # Get the text if prop isn't defined
-              elems = $(selector)
-              if prop?
-                values = elems.map (i, elem) ->
-                  elem.getAttribute prop
-              else
-                values = elems.map (i, elem) ->
-                  elem.innerHTML
+              return
 
-              ## Output for capture
-              console.log '[output] ' + JSON.stringify
-                message: 'values extracted'
-                offset: offset
-                selector: selector
-                property: prop
-                values: values.toArray()
+            # Get the text if prop isn't defined
+            elems = $(selector)
+            if prop?
+              values = elems.map (i, elem) ->
+                elem.getAttribute prop
+            else
+              values = elems.map (i, elem) ->
+                elem.innerHTML
+
+            ## Output for capture
+            console.log '[output] ' + JSON.stringify
+              message: 'values extracted'
+              offset: offset
+              selector: selector
+              property: prop
+              values: values.toArray()
 
           # Need to use `prop` instead of `property` internally because of some
           # weird Casper.js peculiarity

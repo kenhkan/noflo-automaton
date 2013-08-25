@@ -1,7 +1,7 @@
 _ = require 'underscore'
 noflo = require 'noflo'
 
-class Capture extends noflo.Component
+class Output extends noflo.Component
   constructor: ->
     @inPorts =
       in: new noflo.Port 'object'
@@ -11,12 +11,15 @@ class Capture extends noflo.Component
     @inPorts.in.on 'data', (context) =>
       { spooky, action } = context
 
-      if action.action is 'capture'
+      if action.action is 'output'
         _action = _.clone action
-        _action.path ?= 'screenshot.png'
 
         spooky.then [_action, ->
-          @capture path
+          ## Output for capture
+          console.log '[output] ' + JSON.stringify
+            message: 'output value'
+            offset: offset
+            values: value
         ]
 
       else if @outPorts.out.isAttached()
@@ -26,4 +29,4 @@ class Capture extends noflo.Component
       if @outPorts.out.isAttached()
         @outPorts.out.disconnect()
 
-exports.getComponent = -> new Capture
+exports.getComponent = -> new Output

@@ -52,6 +52,7 @@
       "Fill": "components/Fill.coffee",
       "Capture": "components/Capture.coffee",
       "Value": "components/Value.coffee",
+      "Output": "components/Output.coffee",
       "Missing": "components/Missing.coffee"
     },
     "graphs": {
