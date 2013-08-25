@@ -47,8 +47,10 @@
       "Setup": "components/Setup.coffee",
       "Run": "components/Run.coffee",
       "Click": "components/Click.coffee",
+      "Wait": "components/Wait.coffee",
       "Extract": "components/Extract.coffee",
       "Fill": "components/Fill.coffee",
+      "Capture": "components/Capture.coffee",
       "Value": "components/Value.coffee",
       "Missing": "components/Missing.coffee"
     },
