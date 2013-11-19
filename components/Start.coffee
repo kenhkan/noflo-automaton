@@ -1,22 +1,18 @@
 _ = require 'lodash'
 noflo = require 'noflo'
 
-class Run extends noflo.Component
+class Start extends noflo.Component
   constructor: ->
     @inPorts =
-      in: new noflo.ArrayPort 'object'
+      in: new noflo.Port 'object'
     @outPorts =
       out: new noflo.Port 'object'
 
     @inPorts.in.on 'data', (data) =>
       output = []
-      { spooky, offset, rules } = data
+      { spooky } = data
 
-      # Set the offset to `null` (i.e. successful exit) if it has reached the
-      # end of the rules
-      offset = null if not offset? or offset >= rules.length
-
-      # Capture output from phantom's console
+      # Capture output from PhantomJS's console
       captureLogs = (log) ->
         regexp = /^\[output\] /
         if (log.space is 'remote') and (log.message.match regexp)
@@ -28,9 +24,7 @@ class Run extends noflo.Component
       onComplete = _.once =>
         spooky.removeListener 'log', captureLogs
 
-        @outPorts.out.beginGroup offset
         @outPorts.out.send output
-        @outPorts.out.endGroup()
         @outPorts.out.disconnect()
 
       spooky.on 'run.complete', onComplete
@@ -39,4 +33,4 @@ class Run extends noflo.Component
       # Run the goddamn thing
       spooky.run()
 
-exports.getComponent = -> new Run
+exports.getComponent = -> new Start

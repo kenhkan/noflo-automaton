@@ -6,24 +6,24 @@ class Iterate extends noflo.Component
       in: new noflo.ArrayPort 'object'
     @outPorts =
       out: new noflo.Port 'object'
-      run: new noflo.Port 'object'
+      ready: new noflo.Port 'object'
 
-    @inPorts.in.on 'data', (data) =>
+    @inPorts.in.on 'data', (context) =>
       # Increment offset if it exists; otherwise start at 0
-      if data.offset?
-        data.offset++
+      if context.offset?
+        context.offset++
       else
-        data.offset = 0
+        context.offset = 0
 
-      # Send to OUT if there are still rules left; to RUN otherwise
-      if data.rules[data.offset]?
-        @outPorts.out.send data
+      # Send to OUT if there are still rules left; to READY otherwise
+      if context.rules[context.offset]?
+        @outPorts.out.send context
       else
-        data.offset = null
-        @outPorts.run.send data
+        context.offset = null
+        @outPorts.ready.send context
 
     @inPorts.in.on 'disconnect', =>
       @outPorts.out.disconnect()
-      @outPorts.run.disconnect()
+      @outPorts.ready.disconnect()
 
 exports.getComponent = -> new Iterate
