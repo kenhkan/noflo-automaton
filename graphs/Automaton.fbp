@@ -1,10 +1,11 @@
-EXPORT=TEST.IN:IN
 EXPORT=SETUP.RULES:RULES
 EXPORT=SETUP.OPTIONS:OPTIONS
 EXPORT=START.OUT:OUT
 EXPORT=SETUP.ERROR:ERROR
+EXPORT=DUMMY.IN:DUMMY
 
-Test(core/Repeat) OUT -> IN TestTwo(core/Drop)
+# TODO remove when lone network can be programmatically created
+Dummy(core/Repeat) OUT -> IN Drop(core/Drop)
 
 # The run loop
 

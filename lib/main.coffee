@@ -17,12 +17,14 @@ class Automaton
     errBuffer = []
 
     # Create the graph
+    # TODO figure out how to programmatically create lone network
     #graph = noflo.graph.createGraph 'automaton'
     #graph.addNode 'Automaton', 'automaton/Automaton'
 
     # Load the graph
     #noflo.createNetwork graph, (network) ->
-    noflo.graph.loadFBP "'abc' -> IN Automaton(automaton/Automaton)", (graph) ->
+    # TODO remove when lone network can be programmatically created
+    noflo.graph.loadFBP "'dummy' -> DUMMY Automaton(automaton/Automaton)", (graph) ->
       noflo.createNetwork graph, (network) ->
         { inPorts, outPorts } = network.processes.Automaton.component
 
