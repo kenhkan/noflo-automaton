@@ -1,8 +1,4 @@
 *.sw*
 *~
 npm-debug.log
-node_modules/
-browser/
-components/*/
-spec/*.js
-spec/*.xml
+node_modules

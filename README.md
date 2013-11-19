@@ -122,7 +122,7 @@ of rules. It works virtually the same way as an assembly language does.
 
 For each **rule**, the automaton expects:
 
-* **action**: see the `components` directory for available actions
+* **action**: see the `components/runners` directory for available actions
 * **selector**: *optional* The element to perform the action on. Some actions
   do not require an element selector, like `open`
 * **name**: *optional* An identifier so other rules can refer to this rule

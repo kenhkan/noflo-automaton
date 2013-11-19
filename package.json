@@ -46,15 +46,15 @@
       "Iterate": "components/Iterate.coffee",
       "Setup": "components/Setup.coffee",
       "Run": "components/Run.coffee",
-      "Click": "components/Click.coffee",
-      "Wait": "components/Wait.coffee",
-      "Extract": "components/Extract.coffee",
-      "Fill": "components/Fill.coffee",
-      "Capture": "components/Capture.coffee",
-      "Open": "components/Open.coffee",
-      "Value": "components/Value.coffee",
-      "Output": "components/Output.coffee",
-      "Missing": "components/Missing.coffee"
+      "Click": "components/runners/Click.coffee",
+      "Wait": "components/runners/Wait.coffee",
+      "Extract": "components/runners/Extract.coffee",
+      "Fill": "components/runners/Fill.coffee",
+      "Capture": "components/runners/Capture.coffee",
+      "Open": "components/runners/Open.coffee",
+      "Value": "components/runners/Value.coffee",
+      "Output": "components/runners/Output.coffee",
+      "Missing": "components/runners/Missing.coffee"
     },
     "graphs": {
       "Automaton": "graphs/Automaton.fbp"
