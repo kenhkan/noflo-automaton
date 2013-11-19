@@ -48,15 +48,15 @@ noflo-automaton`!
 
 ## Usage
 
-There are two user modes: normal and noflo. Normal mode exposes a regular class
+There are two user modes: CommonJS and NoFlo. CommonJS mode exposes a regular class
 for you to run a JavaScript object-based (i.e. parsed JSON) rule set. In NoFlo
   mode, it is a graph in NoFlo that you could connect to your network.
 
 Your JSON rule set 
 
-### Normal Mode
+### CommonJS Mode
 
-In normal mode, you simply create a new automaton and call `run`. Assuming the
+In CommonJS mode, you simply create a new automaton and call `run`. Assuming the
 JSON file described under the section "Why not just CasperJS" above is
 available at `rules.json`:
 
