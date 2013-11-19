@@ -8,12 +8,12 @@ class Rule extends noflo.Component
       in: new noflo.Port 'object'
     @outPorts =
       out: new noflo.Port 'object'
-      action: new noflo.ArrayPort 'object'
+      action: new noflo.Port 'object'
 
     @inPorts.in.on 'data', (context) =>
       offset = context.offset
       spooky = context.spooky
-      rule = context.rules[offset]
+      rule = _.clone context.rules[offset]
 
       # Do the action
       @outPorts.action.send

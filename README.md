@@ -119,7 +119,7 @@ of rules. It works virtually the same way as an assembly language does.
 
 ### Rule Set API
 
-#### NOTE: The follow API has not been completely implemented. See issues #2 - #5.
+#### NOTE: The follow API has not been completely implemented. See issues #9
 
 For each **rule**, the automaton expects:
 
