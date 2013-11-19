@@ -126,13 +126,13 @@ For each **rule**, the automaton expects:
 * **action**: see the `components/runners` directory for available actions
 * **selector**: *optional* The element to perform the action on. Some actions
   do not require an element selector, like `open`
-* **name**: *optional* An identifier so other rules can refer to this rule
-* **on-success**: *optional* The next rule to execute upon success. It refers
+* **_name**: *optional* An identifier so other rules can refer to this rule
+* **_onSuccess**: *optional* The next rule to execute upon success. It refers
   to the rule by its name. Automaton scans forward for the name and does not go
   back in history. In other words, automaton will execute the first instance of
   the rules matching the name. If it's `false`, quit the program successfully.
   If it's `true`, the immediately next rule is executed. Default to `true`
-* **on-failure**: *optional* The next rule to execute upon failure. The same
+* **_onFailure**: *optional* The next rule to execute upon failure. The same
   properties of determining the next rule to execute as for `on-success` apply.
 
 ### Examples
