@@ -1,72 +1,45 @@
 noflo = require 'noflo'
-_ = require 'lodash'
+_ = require 'underscore'
 Spooky = require 'spooky'
 
 class Setup extends noflo.Component
   constructor: ->
     @inPorts =
-      url: new noflo.Port 'string'
       rules: new noflo.Port 'object'
       options: new noflo.Port 'object'
     @outPorts =
       out: new noflo.Port 'object'
       error: new noflo.Port 'object'
 
-    @inPorts.url.on 'data', (@url) =>
     @inPorts.rules.on 'data', (@rules) =>
+    @inPorts.rules.on 'disconnect', => @setup()
     @inPorts.options.on 'data', (@options) =>
 
-    @inPorts.url.on 'disconnect', =>
-      @setup()
-    @inPorts.rules.on 'disconnect', =>
-      @setup()
-
+  # Set up only when there are rules
   setup: ->
-    @options ?= {}
+    rules = @rules
+    options = @options ?= {}
 
-    # Path to vendor scripts
-    vendorPath = "#{__dirname}/../vendor"
-
-    # Always add jQuery
-    _.extend @options,
-      clientScripts: [
-        "#{vendorPath}/jquery-2.0.3.min.js"
-      ]
-
-    # Only continue if we have both URL and rules
-    return unless @url and @rules
-
-    # Input validity check
-    isValidRuleObject = @isValidRuleObject @rules
-    isValidOptionObject = @isValidOptionObject @options
-    unless isValidRuleObject is true
-      error = isValidRuleObject
-    unless isValidOptionObject is true
-      error = isValidOptionObject
-
-    # Send to error on invalid input
-    if error?
-      e = new Error error
-      e.url = @url
-      e.rules = @rules
-      e.options = @options
-
-      throw e unless @outPorts.error.isAttached()
-      @outPorts.error.send e
-      @outPorts.error.disconnect()
-
-    # Setup Spooky and continue if all is good
-    else
-      @setupSpooky()
-
-    # Reset the cache either way
-    delete @url
+    # Reset the cache
     delete @rules
     delete @options
 
+    # Only continue if we have rules
+    return unless rules
+
+    # Options should be an object
+    unless _.isObject options
+      return if @reportError new Error 'Options object is not valid'
+
+    # Check rule set validity
+    return if @reportError @isValidRuleSet rules
+
+    # If everything is right, set Spooky up
+    @setupSpooky()
+
+  # Set up Spooky to run CasperJS
   setupSpooky: ->
     rules = @rules
-    url = @url
     options = @options
 
     # Create a Spooky instance
@@ -74,15 +47,7 @@ class Setup extends noflo.Component
       casper: options
     , (error) =>
       # Send to error if initialization fails
-      if error
-        e = new Error 'Failed to initialize SpookyJS'
-        e.details = error
-        e.url = url
-        e.rules = rules
-        e.options = options
-        @outPorts.error.send e
-        @outPorts.error.disconnect()
-        return
+      return if @reportError error
 
       # Spooky could have unlimited event listeners
       spooky.setMaxListeners 0
@@ -96,44 +61,46 @@ class Setup extends noflo.Component
         spooky.on 'console', (line) ->
           console.log line
 
-      # Start with some page
-      spooky.start url
-
-      # Forward the packet
+      # Forward the context object
       @outPorts.out.send
         spooky: spooky
         rules: rules
         counts: {}
       @outPorts.out.disconnect()
 
-  # Is the option object valid?
-  isValidOptionObject: (options) ->
-    _.isObject(options) or 'Options object is not valid'
+  ###
+  # Report error, but only if the passed parameter is an error
+  #
+  # @param {Error} error The error to send along
+  # @param {Boolean} True if the parameter is an error and is reported; false
+  #   otherwise
+  ###
+  reportError: (error) ->
+    return false unless error instanceof Error
+    error.rules = @rules
+    error.options = @options
 
+    throw error unless @outPorts.error.isAttached()
+    @outPorts.error.send error
+    @outPorts.error.disconnect()
+    return true
+
+  ###
   # Is the rule object valid?
-  isValidRuleObject: (rules) ->
+  #
+  # @param {Object[]} rules The rule set
+  # @returns {Error?} An error or null
+  ###
+  isValidRuleSet: (rules) ->
     unless _.isArray rules
-      return 'Rule object must be an array'
+      return new Error 'Rule set must be an array'
     unless rules.length > 0
-      return 'Empty rule object'
+      return new Error 'Empty rule set'
 
     for rule in rules
-      valid = _.isObject(rule) and
-        _.isString(rule.selector) and
-        _.isArray(rule.actions) and
-        _.isArray(rule.conditions)
-
-      unless valid
-        return 'Rule object must contain a selector, actions, and conditions'
-
-      for action in rule.actions
-        unless _.isObject(action) and _.isString(action.action)
-          return 'Rule object actions must contain an action property'
-
-      for condition in rule.conditions
-        unless _.isObject(condition)
-          return 'Rule object conditions must contain a value property'
-
-      return true
+      unless _.isObject rule
+        return new Error 'A rule must be an object'
+      unless _.isString rule.action
+        return new Error 'A rule must contain an action'
 
 exports.getComponent = -> new Setup
