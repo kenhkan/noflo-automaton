@@ -11,7 +11,7 @@ class Capture extends noflo.Component
     @inPorts.in.on 'data', (context) =>
       { spooky, rule } = context
 
-      if rule.rule is 'capture'
+      if rule.action is 'capture'
         ###
         # Capture screenshot
         #

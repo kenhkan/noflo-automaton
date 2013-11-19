@@ -9,7 +9,7 @@ class Open extends noflo.Component
       out: new noflo.Port 'object'
 
     @inPorts.in.on 'data', (context) =>
-      { spooky, rule } = context
+      { spooky, rule, offset } = context
 
       if rule.action is 'open'
         ###
@@ -19,7 +19,12 @@ class Open extends noflo.Component
         ###
         { url } = rule
 
-        spooky.thenOpen url
+        # Start rather than open on first rule
+        if offset is 0
+          spooky.start url
+        # Subsequent rules can be `thenOpen`
+        else
+          spooky.thenOpen url
 
       else if @outPorts.out.isAttached()
         @outPorts.out.send context

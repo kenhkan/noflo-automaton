@@ -13,7 +13,7 @@ class Iterate extends noflo.Component
       if context.offset?
         context.offset++
       else
-        context.offset = 0
+        context.offset ?= 0
 
       # Send to OUT if there are still rules left; to READY otherwise
       if context.rules[context.offset]?

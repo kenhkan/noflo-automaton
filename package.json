@@ -43,11 +43,10 @@
   ],
   "noflo": {
     "components": {
-      "TestActions": "components/TestActions.coffee",
-      "TestEffects": "components/TestEffects.coffee",
+      "Rule": "components/Rule.coffee",
       "Iterate": "components/Iterate.coffee",
       "Setup": "components/Setup.coffee",
-      "Run": "components/Run.coffee",
+      "Start": "components/Start.coffee",
       "Click": "components/runners/Click.coffee",
       "Wait": "components/runners/Wait.coffee",
       "Extract": "components/runners/Extract.coffee",

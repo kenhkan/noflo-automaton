@@ -1,5 +1,5 @@
 noflo = require 'noflo'
-_ = require 'underscore'
+_ = require 'lodash'
 Spooky = require 'spooky'
 
 class Setup extends noflo.Component
@@ -35,13 +35,10 @@ class Setup extends noflo.Component
     return if @reportError @isValidRuleSet rules
 
     # If everything is right, set Spooky up
-    @setupSpooky()
+    @setupSpooky rules, options
 
   # Set up Spooky to run CasperJS
-  setupSpooky: ->
-    rules = @rules
-    options = @options
-
+  setupSpooky: (rules, options) ->
     # Create a Spooky instance
     spooky = new Spooky
       casper: options

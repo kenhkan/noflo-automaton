@@ -21,9 +21,6 @@ class Rule extends noflo.Component
         offset: offset
         rule: rule
 
-      # Offset is incremented once per rule
-      context.offset++
-
       # Forward context object to OUT
       @outPorts.out.send context
 
