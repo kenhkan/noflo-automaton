@@ -1,5 +1,5 @@
 noflo = require 'noflo'
-_ = require 'underscore'
+_ = require 'lodash'
 uuid = require 'uuid'
 
 class TestActions extends noflo.Component
