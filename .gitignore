@@ -1,6 +1,8 @@
-/npm-debug.log
-/node_modules/
-/browser/
-/components/*/
-/spec/*.js
-/spec/*.xml
+*.sw*
+*~
+npm-debug.log
+node_modules/
+browser/
+components/*/
+spec/*.js
+spec/*.xml
