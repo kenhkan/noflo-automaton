@@ -2,7 +2,7 @@ noflo = require 'noflo'
 _ = require 'lodash'
 uuid = require 'uuid'
 
-class Runners extends noflo.Component
+class Rule extends noflo.Component
   constructor: ->
     @inPorts =
       in: new noflo.Port 'object'
@@ -31,4 +31,4 @@ class Runners extends noflo.Component
       @outPorts.action.disconnect()
       @outPorts.out.disconnect()
 
-exports.getComponent = -> new Runners
+exports.getComponent = -> new Rule
