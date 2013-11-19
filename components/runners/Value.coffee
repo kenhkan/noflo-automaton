@@ -8,12 +8,12 @@ class Value extends noflo.Component
       out: new noflo.Port 'object'
 
     @inPorts.in.on 'data', (context) =>
-      { spooky, action } = context
+      { spooky, rule } = context
       # Default values
-      action.value ?= ''
+      rule.value ?= ''
 
-      if action.action is 'value'
-        spooky.then [action, ->
+      if rule.action is 'value'
+        spooky.then [rule, ->
           @sendKeys selector, value
         ]
 

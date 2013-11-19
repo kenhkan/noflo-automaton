@@ -9,18 +9,17 @@ class Capture extends noflo.Component
       out: new noflo.Port 'object'
 
     @inPorts.in.on 'data', (context) =>
-      { spooky, action } = context
+      { spooky, rule } = context
 
-      if action.action is 'capture'
-        _action = _.clone action
-        _action.path ?= 'screenshot.png'
+      if rule.rule is 'capture'
         ###
         # Capture screenshot
         #
         # @param {String} path The path to the file to save the screenshot
         ###
+        rule.path ?= 'screenshot.png'
 
-        spooky.then [_action, ->
+        spooky.then [rule, ->
           @capture path
         ]
 

@@ -9,13 +9,12 @@ class Wait extends noflo.Component
       out: new noflo.Port 'object'
 
     @inPorts.in.on 'data', (context) =>
-      { spooky, action } = context
+      { spooky, rule } = context
 
-      if action.action is 'wait'
-        _action = _.clone action
-        _action.timeout ?= 3000
+      if rule.action is 'wait'
+        rule.timeout ?= 3000
 
-        spooky.then [_action, ->
+        spooky.then [rule, ->
           @wait timeout
         ]
 

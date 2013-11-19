@@ -9,13 +9,13 @@ class Fill extends noflo.Component
       out: new noflo.Port 'object'
 
     @inPorts.in.on 'data', (context) =>
-      { spooky, action } = context
-      _action = _.clone action
-      _action.form = JSON.stringify action.form
-      _action.submit ?= false
+      { spooky, rule } = context
+      rule = _.clone rule
+      rule.form = JSON.stringify rule.form
+      rule.submit ?= false
 
-      if action.action is 'fill'
-        spooky.then [_action, ->
+      if rule.action is 'fill'
+        spooky.then [rule, ->
           @fill selector, JSON.parse(form), submit
         ]
 

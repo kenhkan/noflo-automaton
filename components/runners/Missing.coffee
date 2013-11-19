@@ -12,17 +12,17 @@ class Missing extends noflo.Component
       { spooky } = context
 
       params =
-        action: JSON.stringify context.action
+        rule: JSON.stringify context.rule
         offset: context.offset
 
       # Execute in browser space for output
       spooky.then [params, ->
-        @evaluate (action, offset) ->
+        @evaluate (rule, offset) ->
           console.log '[output] ' + JSON.stringify
-            message: 'action runner missing'
+            message: 'rule runner missing'
             offset: offset
-            action: action
-        , (JSON.parse action), offset
+            rule: rule
+        , (JSON.parse rule), offset
       ]
 
 exports.getComponent = -> new Missing

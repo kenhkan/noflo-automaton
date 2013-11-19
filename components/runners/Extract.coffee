@@ -9,16 +9,15 @@ class Extract extends noflo.Component
       out: new noflo.Port 'object'
 
     @inPorts.in.on 'data', (context) =>
-      { spooky, action } = context
+      { spooky, rule } = context
 
       # Extract
-      if action.action is 'extract'
-        _action = _.clone action
-        _action.offset = context.offset
-        _action.prop = action.property or null
+      if rule.action is 'extract'
+        rule.offset = context.offset
+        rule.prop = rule.property or null
 
         # Execute in browser space for output
-        spooky.then [_action, ->
+        spooky.then [rule, ->
           @evaluate (offset, selector, prop) ->
             # Hack: see TestActions on `bypass()`
             if window._bypass > 0

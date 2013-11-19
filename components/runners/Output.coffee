@@ -9,12 +9,11 @@ class Output extends noflo.Component
       out: new noflo.Port 'object'
 
     @inPorts.in.on 'data', (context) =>
-      { spooky, action } = context
+      { spooky, rule } = context
 
-      if action.action is 'output'
-        _action = _.clone action
+      if rule.action is 'output'
 
-        spooky.then [_action, ->
+        spooky.then [rule, ->
           ## Output for capture
           console.log '[output] ' + JSON.stringify
             message: 'output value'

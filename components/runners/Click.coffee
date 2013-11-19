@@ -8,10 +8,10 @@ class Click extends noflo.Component
       out: new noflo.Port 'object'
 
     @inPorts.in.on 'data', (context) =>
-      { spooky, action } = context
+      { spooky, rule } = context
 
-      if action.action is 'click'
-        spooky.thenClick action.selector
+      if rule.action is 'click'
+        spooky.thenClick rule.selector
       else if @outPorts.out.isAttached()
         @outPorts.out.send context
 
