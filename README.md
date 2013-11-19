@@ -80,6 +80,7 @@ A promise is returned.
       console.log(output);
 
     }, function(error) {
+      console.log('FAILED TO SET UP');
       console.log(error);
     });
 
