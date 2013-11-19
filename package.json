@@ -51,6 +51,7 @@
       "Extract": "components/Extract.coffee",
       "Fill": "components/Fill.coffee",
       "Capture": "components/Capture.coffee",
+      "Open": "components/Open.coffee",
       "Value": "components/Value.coffee",
       "Output": "components/Output.coffee",
       "Missing": "components/Missing.coffee"
