@@ -9,44 +9,44 @@ class Extract extends noflo.Component
       out: new noflo.Port 'object'
 
     @inPorts.in.on 'data', (context) =>
-      { spooky, rule } = context
+      { spooky, rule, offset } = context
 
-      # Extract
       if rule.action is 'extract'
-        rule.offset = context.offset
+        ###
+        # Extract some value out of an element by selector
+        #
+        # @param {String} selector The CSS selector
+        # @param {String=} prop The property to extract
+        ###
         rule.prop = rule.property or null
 
         # Execute in browser space for output
         spooky.then [rule, ->
-          @evaluate (offset, selector, prop) ->
-            # Hack: see TestActions on `bypass()`
-            if window._bypass > 0
-              window._bypass--
-              return
+          @evaluate (selector, prop) ->
+            # Get everything that matches
+            elems = document.querySelectorAll selector
 
-            # Get the text if prop isn't defined
-            elems = $(selector)
+            # Get its property
             if prop?
               values = elems.map (i, elem) ->
                 elem.getAttribute prop
+            # Get the text if prop isn't defined
             else
               values = elems.map (i, elem) ->
                 elem.innerHTML
 
             ## Output for capture
             console.log '[output] ' + JSON.stringify
-              message: 'values extracted'
-              offset: offset
+              message: 'Values extracted'
               selector: selector
               property: prop
               values: values.toArray()
 
           # Need to use `prop` instead of `property` internally because of some
-          # weird Casper.js peculiarity
-          , offset, selector, prop
+          # weird CasperJS peculiarity
+          , selector, prop
         ]
 
-      # Forward otherwise
       else if @outPorts.out.isAttached()
         @outPorts.out.send context
 

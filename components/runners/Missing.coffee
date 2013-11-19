@@ -19,7 +19,7 @@ class Missing extends noflo.Component
       spooky.then [params, ->
         @evaluate (rule, offset) ->
           console.log '[output] ' + JSON.stringify
-            message: 'rule runner missing'
+            message: 'Unhandled rule'
             offset: offset
             rule: rule
         , (JSON.parse rule), offset

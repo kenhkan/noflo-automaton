@@ -9,10 +9,16 @@ class Value extends noflo.Component
 
     @inPorts.in.on 'data', (context) =>
       { spooky, rule } = context
-      # Default values
-      rule.value ?= ''
 
       if rule.action is 'value'
+        ###
+        # Put a value into a field by selector
+        #
+        # @param {String} selector The CSS selector
+        # @param {String} value The value to input
+        ###
+        rule.value ?= ''
+
         spooky.then [rule, ->
           @sendKeys selector, value
         ]

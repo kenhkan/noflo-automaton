@@ -12,11 +12,15 @@ class Output extends noflo.Component
       { spooky, rule } = context
 
       if rule.action is 'output'
-
+        ###
+        # Print stuff to screen
+        #
+        # @param {String} value The message to print to screen
+        ###
         spooky.then [rule, ->
           ## Output for capture
           console.log '[output] ' + JSON.stringify
-            message: 'output value'
+            message: 'Output value'
             offset: offset
             values: value
         ]

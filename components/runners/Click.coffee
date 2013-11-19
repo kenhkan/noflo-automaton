@@ -11,7 +11,13 @@ class Click extends noflo.Component
       { spooky, rule } = context
 
       if rule.action is 'click'
+        ###
+        # Click on an element by selector
+        #
+        # @param {String} selector The CSS selector
+        ###
         spooky.thenClick rule.selector
+
       else if @outPorts.out.isAttached()
         @outPorts.out.send context
 

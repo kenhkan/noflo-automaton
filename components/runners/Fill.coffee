@@ -10,11 +10,18 @@ class Fill extends noflo.Component
 
     @inPorts.in.on 'data', (context) =>
       { spooky, rule } = context
-      rule = _.clone rule
-      rule.form = JSON.stringify rule.form
-      rule.submit ?= false
 
       if rule.action is 'fill'
+        ###
+        # Fill out a form
+        #
+        # @param {String} selector The CSS selector
+        # @param {Object} form The form in the format of name-value map
+        # @param {Boolean=} submit Fill and submit the form
+        ###
+        rule.form = JSON.stringify rule.form
+        rule.submit ?= false
+
         spooky.then [rule, ->
           @fill selector, JSON.parse(form), submit
         ]

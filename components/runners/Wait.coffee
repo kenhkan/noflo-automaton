@@ -12,6 +12,11 @@ class Wait extends noflo.Component
       { spooky, rule } = context
 
       if rule.action is 'wait'
+        ###
+        # Wait for some time (in milliseconds)
+        #
+        # @param {Number} timeout The period in milliseconds
+        ###
         rule.timeout ?= 3000
 
         spooky.then [rule, ->
