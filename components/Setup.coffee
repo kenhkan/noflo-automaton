@@ -1,5 +1,5 @@
 noflo = require 'noflo'
-_ = require 'underscore'
+_ = require 'lodash'
 Spooky = require 'spooky'
 
 class Setup extends noflo.Component

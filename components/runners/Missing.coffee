@@ -1,4 +1,4 @@
-_ = require 'underscore'
+_ = require 'lodash'
 noflo = require 'noflo'
 
 class Missing extends noflo.Component
