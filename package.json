@@ -49,6 +49,7 @@
       "Start": "components/Start.coffee",
       "Click": "components/runners/Click.coffee",
       "Wait": "components/runners/Wait.coffee",
+      "WaitFor": "components/runners/WaitFor.coffee",
       "Extract": "components/runners/Extract.coffee",
       "Fill": "components/runners/Fill.coffee",
       "Capture": "components/runners/Capture.coffee",
