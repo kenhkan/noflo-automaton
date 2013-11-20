@@ -1,15 +1,20 @@
 EXPORT=SETUP.RULES:RULES
 EXPORT=SETUP.OPTIONS:OPTIONS
 EXPORT=START.OUT:OUT
-EXPORT=SETUP.ERROR:ERROR
+EXPORT=ERROR.OUT:ERROR
 EXPORT=DUMMY.IN:DUMMY
 
 # TODO remove when lone network can be programmatically created
 Dummy(core/Repeat) OUT -> IN Drop(core/Drop)
 
+# Capture errors
+
+Setup(automaton/Setup) ERROR -> IN Error(core/Merge)
+Start(automaton/Start) ERROR -> IN Error()
+
 # The run loop
 
-Setup(automaton/Setup) OUT -> IN Iterate(automaton/Iterate) OUT -> IN Rule(automaton/Rule) OUT -> IN Iterate() READY -> IN Start(automaton/Start)
+Setup() OUT -> IN Iterate(automaton/Iterate) OUT -> IN Rule(automaton/Rule) OUT -> IN Iterate() READY -> IN Start()
 
 # Action runners
 
