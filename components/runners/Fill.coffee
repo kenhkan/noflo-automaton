@@ -19,7 +19,7 @@ class Fill extends noflo.Component
         # @param {Object} form The form in the format of name-value map
         # @param {Boolean=} submit Fill and submit the form
         ###
-        rule.form = JSON.stringify rule.form
+        rule.form = JSON.stringify rule.form or {}
         rule.submit ?= false
 
         spooky.then [rule, ->

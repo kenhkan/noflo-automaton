@@ -24,8 +24,8 @@ class Automaton
     # Load the graph
     #noflo.createNetwork graph, (network) ->
     # TODO remove when lone network can be programmatically created
-    noflo.graph.loadFBP "'dummy' -> DUMMY Automaton(automaton/Automaton)", (graph) ->
-      noflo.createNetwork graph, (network) ->
+    noflo.graph.loadFBP "'dummy' -> DUMMY Automaton(automaton/Automaton)", (graph) =>
+      noflo.createNetwork graph, (network) =>
         { inPorts, outPorts } = network.processes.Automaton.component
 
         # Run it
