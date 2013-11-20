@@ -45,7 +45,7 @@ class Automaton
         outSocket.on 'data', (data) ->
           outBuffer.push data
         outSocket.on 'disconnect', ->
-          outBuffer.resolve outBuffer
+          deferred.resolve outBuffer
 
         # Inject options
         optionsSocket = noflo.internalSocket.createSocket()
