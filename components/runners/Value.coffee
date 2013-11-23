@@ -20,6 +20,10 @@ class Value extends noflo.Component
         rule.value ?= ''
 
         spooky.then [rule, ->
+          @waitForSelector selector
+        ]
+
+        spooky.then [rule, ->
           @sendKeys selector, value
         ]
 

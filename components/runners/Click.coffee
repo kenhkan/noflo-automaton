@@ -16,6 +16,10 @@ class Click extends noflo.Component
         #
         # @param {String} selector The CSS selector
         ###
+        spooky.then [rule, ->
+          @waitForSelector selector
+        ]
+
         spooky.thenClick rule.selector
 
       else if @outPorts.out.isAttached()

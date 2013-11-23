@@ -20,6 +20,10 @@ class Extract extends noflo.Component
         ###
         rule.prop = rule.property or null
 
+        spooky.then [rule, ->
+          @waitForSelector selector
+        ]
+
         # Execute in browser space for output
         spooky.then [rule, ->
           @evaluate (selector, prop) ->

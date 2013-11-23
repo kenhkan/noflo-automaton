@@ -23,6 +23,10 @@ class Fill extends noflo.Component
         rule.submit ?= false
 
         spooky.then [rule, ->
+          @waitForSelector selector
+        ]
+
+        spooky.then [rule, ->
           @fill selector, JSON.parse(form), submit
         ]
 
