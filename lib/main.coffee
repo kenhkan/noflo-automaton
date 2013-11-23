@@ -13,8 +13,6 @@ class Automaton
   ###
   run: (rules) ->
     deferred = Q.defer()
-    outBuffer = []
-    errBuffer = []
 
     # Create the graph
     # TODO figure out how to programmatically create lone network
@@ -35,17 +33,13 @@ class Automaton
         errSocket = noflo.internalSocket.createSocket()
         outPorts.error.attach errSocket
         errSocket.on 'data', (data) ->
-          errBuffer.push data
-        errSocket.on 'disconnect', ->
-          deferred.reject errBuffer
+          deferred.reject data
 
         # Attach a receiver for output
         outSocket = noflo.internalSocket.createSocket()
         outPorts.out.attach outSocket
         outSocket.on 'data', (data) ->
-          outBuffer.push data
-        outSocket.on 'disconnect', ->
-          deferred.resolve outBuffer
+          deferred.resolve data
 
         # Inject options
         optionsSocket = noflo.internalSocket.createSocket()
