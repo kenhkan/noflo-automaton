@@ -18,7 +18,7 @@
   ],
   "dependencies": {
     "noflo": "~0.4.0",
-    "spooky": "~0.2.3",
+    "spooky": "~0.2.4",
     "uuid": "~1.4.1",
     "noflo-core": "~0.1.1",
     "noflo-strings": "~0.1.1",
@@ -55,6 +55,7 @@
       "Capture": "components/runners/Capture.coffee",
       "Open": "components/runners/Open.coffee",
       "Value": "components/runners/Value.coffee",
+      "Select": "components/runners/Select.coffee",
       "Output": "components/runners/Output.coffee",
       "Missing": "components/runners/Missing.coffee"
     },
