@@ -18,8 +18,8 @@ class Output extends noflo.Component
         # @param {String} value The message to print to screen
         ###
         spooky.then [rule, ->
-          ## Output for capture
-          console.log '[output] ' + JSON.stringify
+          # Output for capture
+          @log '[output] ' + JSON.stringify
             message: 'Output value'
             offset: offset
             values: value
