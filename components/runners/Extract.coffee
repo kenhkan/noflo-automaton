@@ -26,29 +26,32 @@ class Extract extends noflo.Component
 
         # Execute in browser space for output
         spooky.then [rule, ->
-          @evaluate (selector, prop) ->
+          output = @evaluate (selector, prop) ->
+            values = []
             # Get everything that matches
             elems = document.querySelectorAll selector
 
             # Get its property
             if prop?
-              values = elems.map (i, elem) ->
-                elem.getAttribute prop
+              for elem in elems
+                values.push elem.getAttribute prop
             # Get the text if prop isn't defined
             else
-              values = elems.map (i, elem) ->
-                elem.innerHTML
+              for elem in elems
+                values.push elem.innerHTML
 
-            ## Output for capture
-            console.log '[output] ' + JSON.stringify
+            # Output for capture
+            JSON.stringify
               message: 'Values extracted'
               selector: selector
               property: prop
-              values: values.toArray()
+              values: values
 
           # Need to use `prop` instead of `property` internally because of some
           # weird CasperJS peculiarity
           , selector, prop
+
+          @log output, 'info', 'output'
         ]
 
       else if @outPorts.out.isAttached()

@@ -19,10 +19,12 @@ class Output extends noflo.Component
         ###
         spooky.then [rule, ->
           # Output for capture
-          @log '[output] ' + JSON.stringify
+          output = JSON.stringify
             message: 'Output value'
             offset: offset
             values: value
+
+          @log output, 'info', 'output'
         ]
 
       else if @outPorts.out.isAttached()

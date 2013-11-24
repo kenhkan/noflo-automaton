@@ -16,8 +16,8 @@ class Start extends noflo.Component
 
       # Capture output from CasperJS/PhantomJS
       captureLogs = (log) ->
-        if (log.space is 'remote') and (log.message.match /^\[output\] /)
-          output.push JSON.parse log.message.replace regexp, ''
+        if log.space is 'output'
+          output.push JSON.parse log.message
 
       spooky.on 'log', captureLogs
 

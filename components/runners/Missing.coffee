@@ -17,12 +17,11 @@ class Missing extends noflo.Component
 
       # Execute in browser space for output
       spooky.then [params, ->
-        @evaluate (rule, offset) ->
-          console.log '[output] ' + JSON.stringify
-            message: 'Unhandled rule'
-            offset: offset
-            rule: rule
-        , (JSON.parse rule), offset
+        output = JSON.stringify
+          message: 'Unsupported rule'
+          offset: offset
+          rule: rule
+        @log output, 'info', 'output'
       ]
 
 exports.getComponent = -> new Missing
