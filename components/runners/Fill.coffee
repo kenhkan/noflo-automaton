@@ -1,5 +1,6 @@
 _ = require 'lodash'
 noflo = require 'noflo'
+testSelector = require '../../common/testSelector'
 
 class Fill extends noflo.Component
   constructor: ->
@@ -22,9 +23,7 @@ class Fill extends noflo.Component
         rule.form = JSON.stringify rule.form or {}
         rule.submit ?= false
 
-        spooky.then [rule, ->
-          @waitForSelector selector
-        ]
+        testSelector spooky, rule.selector, context.offset
 
         spooky.then [rule, ->
           @fill selector, JSON.parse(form), submit

@@ -1,4 +1,5 @@
 noflo = require 'noflo'
+testSelector = require '../../common/testSelector'
 
 class Click extends noflo.Component
   constructor: ->
@@ -16,9 +17,7 @@ class Click extends noflo.Component
         #
         # @param {String} selector The CSS selector
         ###
-        spooky.then [rule, ->
-          @waitForSelector selector
-        ]
+        testSelector spooky, rule.selector, context.offset
 
         spooky.thenClick rule.selector
 

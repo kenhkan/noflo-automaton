@@ -1,4 +1,5 @@
 noflo = require 'noflo'
+testSelector = require '../../common/testSelector'
 
 class Value extends noflo.Component
   constructor: ->
@@ -19,9 +20,7 @@ class Value extends noflo.Component
         ###
         rule.value ?= ''
 
-        spooky.then [rule, ->
-          @waitForSelector selector
-        ]
+        testSelector spooky, rule.selector, context.offset
 
         spooky.then [rule, ->
           @sendKeys selector, value

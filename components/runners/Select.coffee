@@ -1,4 +1,5 @@
 noflo = require 'noflo'
+testSelector = require '../../common/testSelector'
 
 class Select extends noflo.Component
   constructor: ->
@@ -17,9 +18,7 @@ class Select extends noflo.Component
         # @param {String} selector The CSS selector
         # @param {String} value The value to select
         ###
-        spooky.then [rule, ->
-          @waitForSelector selector
-        ]
+        testSelector spooky, rule.selector, context.offset
 
         spooky.then [rule, ->
           @evaluate (selector, value) ->

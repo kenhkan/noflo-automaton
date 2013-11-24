@@ -1,5 +1,6 @@
 _ = require 'lodash'
 noflo = require 'noflo'
+testSelector = require '../../common/testSelector'
 
 class Extract extends noflo.Component
   constructor: ->
@@ -20,9 +21,7 @@ class Extract extends noflo.Component
         ###
         rule.prop = rule.property or null
 
-        spooky.then [rule, ->
-          @waitForSelector selector
-        ]
+        testSelector spooky, rule.selector, context.offset
 
         # Execute in browser space for output
         spooky.then [rule, ->
