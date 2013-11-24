@@ -25,6 +25,7 @@ class Automaton
     noflo.graph.loadFBP "'dummy' -> DUMMY Automaton(automaton/Automaton)", (graph) =>
       noflo.createNetwork graph, (network) =>
         { inPorts, outPorts } = network.processes.Automaton.component
+        status = null
 
         # Run it
         network.start()
@@ -32,14 +33,20 @@ class Automaton
         # Attach a receiver for errors
         errSocket = noflo.internalSocket.createSocket()
         outPorts.error.attach errSocket
+        errSocket.on 'begingroup', (_status) ->
+          status = _status
         errSocket.on 'data', (data) ->
-          deferred.reject data
+          deferred.reject
+            status: status
+            output: data
 
         # Attach a receiver for output
         outSocket = noflo.internalSocket.createSocket()
         outPorts.out.attach outSocket
         outSocket.on 'data', (data) ->
-          deferred.resolve data
+          deferred.resolve
+            status: true
+            output: data
 
         # Inject options
         optionsSocket = noflo.internalSocket.createSocket()

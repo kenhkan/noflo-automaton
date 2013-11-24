@@ -49,10 +49,6 @@ class Setup extends noflo.Component
       # Spooky could have unlimited event listeners
       spooky.setMaxListeners 0
 
-      # Any error in Casper is reported
-      spooky.on 'error', (e) ->
-        console.error e
-
       # Output all console messages if verbose
       if options.verbose
         spooky.on 'console', (line) ->

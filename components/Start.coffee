@@ -30,9 +30,11 @@ class Start extends noflo.Component
       spooky.on 'run.complete', onComplete
 
       # Forward packets also on error
-      onError = _.once =>
+      onError = _.once (message, status) =>
         spooky.removeListener 'log', captureLogs
+        @outPorts.error.beginGroup status
         @outPorts.error.send output
+        @outPorts.error.endGroup
         @outPorts.error.disconnect()
 
       spooky.on 'die', onError
