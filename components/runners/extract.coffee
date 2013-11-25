@@ -18,16 +18,18 @@ class Extract extends noflo.Component
         ###
         # Extract some value out of an element by selector
         #
+        # @param {String} name A name to associate the extracted data with
         # @param {String} selector The CSS selector
         # @param {String=} prop The property to extract
         ###
         rule.prop = rule.property or null
+        rule.name ?= ''
 
         testSelector spooky, rule.selector, context.offset
 
         # Execute in browser space for output
         spooky.then [rule, ->
-          output = @evaluate (selector, prop) ->
+          output = @evaluate (name, selector, prop) ->
             values = []
             # Get everything that matches
             elems = document.querySelectorAll selector
@@ -43,6 +45,7 @@ class Extract extends noflo.Component
 
             # Output for capture
             JSON.stringify
+              name: name
               message: 'Values extracted'
               selector: selector
               property: prop
@@ -50,7 +53,7 @@ class Extract extends noflo.Component
 
           # Need to use `prop` instead of `property` internally because of some
           # weird CasperJS peculiarity
-          , selector, prop
+          , name, selector, prop
 
           @log output, 'info', 'output'
         ]
