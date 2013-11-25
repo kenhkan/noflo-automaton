@@ -2,6 +2,8 @@ noflo = require 'noflo'
 testSelector = require '../../common/testSelector'
 
 class Click extends noflo.Component
+  actionCount: 2
+
   constructor: ->
     @inPorts =
       in: new noflo.Port 'object'

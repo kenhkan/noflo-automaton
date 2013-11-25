@@ -20,6 +20,7 @@ class Rule extends noflo.Component
         spooky: spooky
         offset: offset
         rule: rule
+        rules: context.rules
 
       # Forward context object to OUT
       @outPorts.out.send context

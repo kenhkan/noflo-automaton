@@ -2,6 +2,8 @@ noflo = require 'noflo'
 testSelector = require '../../common/testSelector'
 
 class Value extends noflo.Component
+  actionCount: 2
+
   constructor: ->
     @inPorts =
       in: new noflo.Port 'object'
