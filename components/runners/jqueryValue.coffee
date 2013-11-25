@@ -1,7 +1,7 @@
 noflo = require 'noflo'
 testSelector = require '../../common/testSelector'
 
-class Select extends noflo.Component
+class JqueryValue extends noflo.Component
   actionCount: 2
 
   constructor: ->
@@ -13,23 +13,18 @@ class Select extends noflo.Component
     @inPorts.in.on 'data', (context) =>
       { spooky, rule } = context
 
-      if rule.action is 'select'
+      if rule.action is 'jqueryValue'
         ###
-        # Select an option from a dropbox
+        # Change the value of an element by the provided selector
         #
         # @param {String} selector The CSS selector
         # @param {String} value The value to select
         ###
         testSelector spooky, rule.selector, context.offset
 
-        rule.offset = context.offset
         spooky.then [rule, ->
-          @evaluate (selector, valueSelector, value) ->
-            selectEl = document.querySelector selector
-            for option, i in selectEl.options
-              if option.value is value
-                selectEl.selectedIndex = i
-                break
+          @evaluate (selector, value) ->
+            $(selector).val(value).change()
           , selector, value
         ]
 
@@ -40,4 +35,4 @@ class Select extends noflo.Component
       if @outPorts.out.isAttached()
         @outPorts.out.disconnect()
 
-exports.getComponent = -> new Select
+exports.getComponent = -> new JqueryValue

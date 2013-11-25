@@ -18,4 +18,4 @@ Setup() OUT -> IN Iterate(automaton/Iterate) OUT -> IN Rule(automaton/Rule) OUT 
 
 # Action runners
 
-Rule() ACTION -> IN Click(automaton/Click) OUT -> IN Fill(automaton/Fill) OUT -> IN Extract(automaton/Extract) OUT -> IN Value(automaton/Value) OUT -> IN Wait(automaton/Wait) OUT -> IN Open(automaton/Open) OUT -> IN Capture(automaton/Capture) OUT -> IN Select(automaton/Select) OUT -> IN Bypass(automaton/Bypass) OUT -> IN Output(automaton/Output) OUT -> IN Missing(automaton/Missing)
+Rule() ACTION -> IN Click(automaton/Click) OUT -> IN Fill(automaton/Fill) OUT -> IN Extract(automaton/Extract) OUT -> IN Value(automaton/Value) OUT -> IN Wait(automaton/Wait) OUT -> IN Open(automaton/Open) OUT -> IN Capture(automaton/Capture) OUT -> IN Select(automaton/Select) OUT -> IN Bypass(automaton/Bypass) OUT -> IN JqueryValue(automaton/JqueryValue) OUT -> IN WaitForText(automaton/WaitForText) OUT -> IN Output(automaton/Output) OUT -> IN Missing(automaton/Missing)

@@ -22,6 +22,7 @@ class Missing extends noflo.Component
           offset: offset
           rule: rule
         @log output, 'info', 'output'
+        @die "Rule #{rule.action} is not supported", offset
       ]
 
 exports.getComponent = -> new Missing

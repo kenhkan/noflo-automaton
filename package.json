@@ -52,6 +52,8 @@
       "Click": "components/runners/click.coffee",
       "Wait": "components/runners/wait.coffee",
       "WaitFor": "components/runners/waitFor.coffee",
+      "WaitForText": "components/runners/waitForText.coffee",
+      "JqueryValue": "components/runners/JqueryValue.coffee",
       "Extract": "components/runners/extract.coffee",
       "Fill": "components/runners/fill.coffee",
       "Capture": "components/runners/capture.coffee",
